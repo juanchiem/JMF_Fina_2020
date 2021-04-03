@@ -1,6 +1,18 @@
 # Variedades
 
 
+```r
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+pacman::p_load(tidyverse)
+# pacman::p_load(tidyverse, googlesheets4, googledrive)
+# javi <- gs4_get("1jTFU8fQw2fiTyfrhuPSjc4lcAC6U9G-zjvOlADQ6JNE")
+# gs4_browse(javi)
+# drive_auth(email = "edwardsmolina@gmail.com")
+# gs4_auth(email = "edwardsmolina@gmail.com")
+source(here::here("0 themes.R"))
+load(here::here("data/data.Rdata"))
+# glimpse(dat)
+```
 
 
 ```r

@@ -7,7 +7,7 @@ output:
 
 # Superficies
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 pacman::p_load(tidyverse, googlesheets4, googledrive)
 # drive_auth(email = "edwardsmolina@gmail.com")

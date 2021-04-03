@@ -1,6 +1,6 @@
 # Importacion {#import}
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 pacman::p_load(tidyverse, googlesheets4)
 # gs4_auth(email = "edwardsmolina@gmail.com")

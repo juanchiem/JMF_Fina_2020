@@ -1,6 +1,12 @@
 # Malezas
 
 
+```r
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+pacman::p_load(tidyverse, fuzzyjoin) 
+load(here::here("data/data.Rdata"))
+source(here::here("0 themes.R"))
+```
 
 
 ```r

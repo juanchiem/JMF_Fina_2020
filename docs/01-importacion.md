@@ -1,6 +1,15 @@
 # Importacion {#import}
 
 
+```r
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+pacman::p_load(tidyverse, googlesheets4)
+# gs4_auth(email = "edwardsmolina@gmail.com")
+# gs4_find("JMF_2020")
+# jmf <- gs4_get("1b3Zu9CT-B1lHVwkl7wLS_njDQyvwRFYnw_H-OjyO7LA")
+# gs4_browse(jmf)
+load(here::here("data/data.Rdata"))
+```
 
 
 

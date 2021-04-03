@@ -7,7 +7,7 @@ output:
 
 # Manejo 
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 pacman::p_load(tidyverse, lubridate, scales, ggridges)
 # drive_auth(email = "edwardsmolina@gmail.com")

@@ -1,6 +1,6 @@
 # Malezas
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 pacman::p_load(tidyverse, fuzzyjoin) 
 load(here::here("data/data.Rdata"))
