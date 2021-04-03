@@ -1,0 +1,317 @@
+# Protección
+
+```{r message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+pacman::p_load(tidyverse, googlesheets4, googledrive)
+# drive_auth(email = "edwardsmolina@gmail.com")
+# gs4_auth(email = "edwardsmolina@gmail.com")
+source(here::here("0 themes.R"))
+load(here::here("data/data.Rdata"))
+# glimpse(dat)
+```
+
+```{r}
+fungicidas = "https://docs.google.com/spreadsheets/d/1cTzo36jHRULfBf8c83TDpauxiwHrxeKrGprUUxLRzm0/edit?usp=sharing"
+fungic <- gs4_get(fungicidas)
+dfungi <- read_sheet(fungic, sheet = "fungi") 
+dfungi <- dfungi %>% 
+  distinct(producto, .keep_all = TRUE)  %>% 
+  arrange(producto)
+head(dfungi)
+```
+
+```{r}
+dat %>%   
+  select(cultivo_de_cosecha, campana, Zona, contains("fungicida")) %>% 
+  filter(str_detect(cultivo_de_cosecha, 'Tr|Ceb')) %>%
+  filter(!str_detect(cultivo_de_cosecha, 'Candeal')) %>%
+  rowwise() %>% 
+  mutate(aplicaciones = sum(!is.na(fungicida1), !is.na(fungicida2))) %>% 
+  ungroup() %>% 
+  count(cultivo_de_cosecha, Zona, campana, aplicaciones) %>% 
+  arrange(cultivo_de_cosecha, Zona,campana, aplicaciones, -n) %>% 
+  group_by(cultivo_de_cosecha, Zona, campana) %>%
+  mutate(porcent = round((n/sum(n))*100)) -> dat_fungi
+head(dat_fungi)
+```
+
+Cuantas aplicaciones se llevan los cultivos?
+
+```{r}
+dat_fungi %>%
+  filter(!campana == "17-18") %>% 
+  group_by(cultivo_de_cosecha, Zona, campana)%>%
+  summarise(media = weighted.mean(aplicaciones, n)) -> n_fungi
+head(n_fungi)
+```
+
+```{r}
+dat_fungi %>% 
+  mutate(aplicaciones = fct_relevel(as.factor(aplicaciones), c('0','1','2'))) %>% 
+  filter(!campana =="17-18") %>% 
+  filter(cultivo_de_cosecha =="Trigo") %>% 
+  ggplot(aes(x = Zona, y = porcent,  fill =forcats::fct_rev(aplicaciones), 
+             label = round(porcent))) +
+  facet_grid(. ~ campana)+
+  geom_col(position = position_stack(), color = "black", alpha= 0.5) +
+  geom_text(position = position_stack(vjust = .5), fontface = "bold", size=3) +
+  labs(title = "Trigo" ,
+       fill = "Nro de aplicaciones", 
+       x = "", y = "% lotes aplicados")+
+  geom_text(data = n_fungi %>% 
+                filter(cultivo_de_cosecha =="Trigo"), 
+            aes(x= Zona, y=-10, 
+                label = round(media,1), 
+                fill = NA), 
+            angle = 0) +
+  scale_y_continuous(expand = expand_scale(add = c(13,3)))+
+  theme(axis.text.x=element_blank())+
+  coord_flip()+
+  scale_fill_manual(values = c("0"= "green3", "1"="steelblue", "2" ="red3"))+
+  theme_dens1_legend
+# ggsave(last_plot(), file = "5_plots_fungi/fungicidas_aplicaciones_trigo.png", width = 7, height = 3)
+```
+
+```{r}
+dat_fungi %>% 
+  mutate(aplicaciones = fct_relevel(as.factor(aplicaciones), c('0','1','2'))) %>% 
+  filter(!campana =="17-18") %>% 
+  filter(cultivo_de_cosecha =="Cebada") %>% 
+  ggplot(aes(x = Zona, y = porcent,  fill =forcats::fct_rev(aplicaciones), 
+             label = round(porcent))) +
+  facet_grid(. ~ campana)+
+  geom_col(position = position_stack(), color = "black", alpha= 0.5) +
+  geom_text(position = position_stack(vjust = .5), fontface = "bold", size=3) +
+  labs(title = "Cebada" ,
+       fill = "Nro de aplicaciones", 
+       x = "", y = "% lotes aplicados")+
+  geom_text(data = n_fungi %>% 
+                filter(cultivo_de_cosecha =="Trigo"), 
+            aes(x= Zona, y=-10, 
+                label = round(media,1), 
+                fill = NA), 
+            angle = 0) +
+  scale_y_continuous(expand = expand_scale(add = c(13,3)))+
+  theme(axis.text.x=element_blank())+
+  coord_flip()+
+  scale_fill_manual(values = c("0"= "green3", "1"="steelblue", "2" ="red3"))+
+  theme_dens1_legend  
+
+# ggsave(last_plot(), file = "5_plots_fungi/fungicidas_aplicaciones_cebada.png", width = 7, 
+#        height = 3)
+
+```
+
+Lotes aplicados en 2020
+
+```{r}
+dat %>% 
+  filter(campana == "20-21") %>% 
+  filter(fungicida == "Si") %>% 
+  filter(str_detect(cultivo_de_cosecha, 'Tr|Ceb')) %>%
+  filter(!str_detect(cultivo_de_cosecha, 'Candeal')) %>%
+  select(cultivo_de_cosecha, Zona, campo, variedad, fungicida:enfermedad_2, rinde) %>% 
+  rowwise() %>%
+  mutate(aplicaciones = sum(!is.na(fungicida1),!is.na(fungicida2), na.rm = T)) -> df20
+
+head(df20)
+```
+
+Los que aplican 1 solo fungi: en que estadio lo hacen?
+
+```{r}
+require(webr)
+dfungi %>% 
+  mutate(across(contains(".c"), ~.*dosis))
+
+df20 %>% 
+  count(cultivo_de_cosecha, aplicaciones, producto= fungicida1) %>% 
+  arrange(-n) %>% 
+  left_join(select(dfungi, producto, activos, grupos),  by = "producto") %>%
+  drop_na(producto) %>%
+  mutate(mezcla = case_when(
+    activos == 2 ~ "Doble", 
+    activos == 3 ~ "Triple"), 
+    mezcla = fct_rev(mezcla)) -> df20_fungi1
+head(df20_fungi1)
+```
+
+```{r}
+df20_fungi1 %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>% 
+  filter(aplicaciones ==1) %>%
+  PieDonut(aes(pies=mezcla, donuts=producto, count =n))
+
+# ggsave(file = "plots_fungi/aplic_simple_tr.png", width = 6, height = 6)
+```
+
+```{r}
+df20_fungi1 %>% 
+  filter(cultivo_de_cosecha == "Cebada") %>% 
+  filter(aplicaciones ==1) %>%
+  PieDonut(aes(pies=mezcla, donuts=producto, count =n))
+
+# ggsave(file = "5_plots_fungi/aplic_simple_ceb.png", width = 6, height = 6)
+
+```
+
+```{r}
+df20_fungi1 %>% 
+  filter(aplicaciones ==2) %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>% 
+  PieDonut(aes(pies=mezcla, donuts=producto, count =n), 
+           labelposition=1, r0=0.2,r1=0.8,r2=1.4)
+# ggsave(file = "5_plots_fungi/aplic_simple_ceb.png", width = 6, height = 6)
+```
+
+```{r}
+df20_fungi1 %>% 
+  filter(aplicaciones ==2) %>%
+  filter(cultivo_de_cosecha == "Cebada") %>% 
+  PieDonut(aes(pies=mezcla, donuts=producto, count =n), 
+  labelposition=0, r0=0.2,r1=0.8,r2=1.4)
+```
+
+```{r}
+df20 %>% 
+  filter(aplicaciones ==2) %>% 
+  count(cultivo_de_cosecha, producto= fungicida2) %>% 
+  arrange(-n) %>% 
+  left_join(select(dfungi, producto, activos, grupos),  by = "producto") %>%
+  drop_na(producto) %>%
+  mutate(mezcla = case_when(
+    activos == 2 ~ "Doble", 
+    activos == 3 ~ "Triple"), 
+    mezcla = fct_rev(mezcla)) -> df20_fungi2
+
+df20_fungi2 %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>%
+  PieDonut(aes(pies=mezcla, donuts=producto, count =n), 
+           labelposition=0, r0=0.2,r1=0.8,r2=1.4) 
+
+df20_fungi2 %>% 
+  filter(cultivo_de_cosecha == "Cebada") %>% 
+  PieDonut(aes(pies=mezcla, donuts=producto, count =n), 
+  labelposition=0, r0=0.2,r1=0.8,r2=1.4) 
+```
+
+```{r eval FALSE}
+list.files(path = here::here("fungi_plots"), 
+           pattern = ".png", 
+           all.files = TRUE, full.names = TRUE) %>%   
+  map(~ drive_upload(., path = as_dribble("juanchi_guille/JMF_fina_2020/5_plots_fungi"), 
+overwrite = TRUE))
+```
+
+```{r}
+df20  %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>%
+  # filter(aplicaciones == 1) %>% 
+     drop_na(enfermedad_1) %>%
+  rename(producto = fungicida1) %>% 
+  left_join(select(dfungi, producto, activos, grupos),  by = "producto") %>%
+  drop_na(producto) %>%
+  mutate(mezcla = case_when(
+    activos == 2 ~ "Doble", 
+    activos == 3 ~ "Triple"), 
+    mezcla = mezcla) %>% 
+  ggplot()+
+  facet_grid(enfermedad_1 ~ Zona, scales = "free_y")+
+  aes(x = factor(aplicaciones), y=rinde)+
+  geom_point(alpha=0.3)+
+  stat_summary(fun.data = "mean_cl_boot", colour = "red", size = 0.5)+
+  stat_summary(aes(label=round(..y..,0)), 
+               fun=mean, geom="text", size=4,vjust = -0.5)+
+  labs(x = "Nro de aplicaciones", y = "kg/ha", title = "Trigo/2020")+
+  theme_bw2
+```
+
+```{r}
+df20 %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>%
+  filter(aplicaciones == 1) %>% 
+  drop_na(enfermedad_1) %>%
+  rename(producto = fungicida1) %>% 
+  left_join(select(dfungi, producto, activos, grupos),  by = "producto") %>%
+  drop_na(producto) %>%
+  mutate(mezcla = case_when(
+    activos == 2 ~ "Doble", 
+    activos == 3 ~ "Triple"), 
+    mezcla = mezcla) %>% 
+  ggplot()+
+  facet_grid(enfermedad_1 ~ Zona, scales = "free_y")+
+  aes(x = factor(mezcla), y=rinde)+
+  geom_point(alpha=0.3)+
+  stat_summary(fun.data = "mean_cl_boot", colour = "red", size = 0.5)+
+  stat_summary(aes(label=round(..y..,0)), 
+               fun=mean, geom="text", size=4,vjust = -0.5)+
+  labs(x = "Tipo de mezcla", y = "kg/ha", title = "Trigo/2020 - aplicación simple")+
+  theme_bw2
+
+```
+
+```{r}
+df20 %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>%
+  # filter(aplicaciones == 1) %>% 
+  filter(Zona == "Madariaga") %>%   
+   # count(campo) %>% arrange(-n)
+ filter(campo == "Bellamar") %>% 
+  drop_na(enfermedad_1) %>%
+  rename(producto = fungicida1) %>% 
+  left_join(select(dfungi, producto, activos, grupos),  by = "producto") %>%
+   # count(producto) %>% arrange(-n)
+  drop_na(producto) %>%
+  mutate(mezcla = case_when(
+    activos == 2 ~ "Doble", 
+    activos == 3 ~ "Triple"), 
+    mezcla = mezcla) %>% 
+  ggplot()+
+  # facet_grid(. ~ enfermedad_1, scales = "free_y")+
+  aes(x = producto, y=rinde)+
+  stat_summary(fun.data = "mean_cl_boot", colour = "red", size = 0.5)+
+  stat_summary(aes(label=round(..y..,0)), 
+               fun=mean, geom="text", size=4,vjust = -0.5)+
+  geom_point(alpha=0.3)+ 
+  labs(x = "Tipo de mezcla", y = "kg/ha", title = "Trigo/2020 - aplicación simple")+
+  coord_flip()+
+  theme_bw2
+```
+
+```{r}
+df20 %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>% 
+  drop_na(enfermedad_1) %>%
+  # distinct(enfermedad_1) %>% pull
+  ggplot()+
+  aes(x = factor(aplicaciones), y=rinde)+
+  geom_point(alpha=0.3)+
+  stat_summary(fun.data = "mean_cl_boot", colour = "red", size = 0.5)+
+  facet_grid(enfermedad_1 ~ Zona, scales = "free_y")+
+  stat_summary(aes(label=round(..y..,0)), 
+               fun=mean, geom="text", size=4,vjust = -0.5)+
+  labs(x = "Nro de aplicaciones", y = "kg/ha", title = "Trigo/2020 - Enfermedad_1 ")+
+  theme_bw2
+```
+
+```{r}
+n_fun <- function(x){
+  return(data.frame(y = -Inf, label = paste0("n = ",length(x))))
+}
+
+df20 %>% 
+  filter(cultivo_de_cosecha == "Trigo") %>% 
+  # count(variedad) %>% arrange(-n)
+  filter(str_detect(variedad, "BAGUETTE")) %>%
+  drop_na(enfermedad_1) %>%
+  ggplot()+
+  aes(x = factor(aplicaciones), y=rinde)+
+  geom_point(aes(col=variedad), alpha=0.3)+
+  stat_summary(fun.data = "mean_cl_boot", colour = "red", size = 0.5)+
+  facet_grid(. ~ enfermedad_1, scales = "free_y")+
+  stat_summary(aes(label=round(..y..,0)), 
+               fun=mean, geom="text", size=4, vjust = -0.5)+
+    stat_summary(fun.data = n_fun, geom = "text", vjust = -0.5)+
+  labs(x = "Nro de aplicaciones", y = "kg/ha", title = "Trigo/2020 - Enfermedad_1 ")+
+  theme_bw2
+```

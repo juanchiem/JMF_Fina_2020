@@ -1,7 +1,7 @@
 --- 
 title: "Modelo de análisis de campaña"
 author: ""
-date: "`r Sys.Date()`"
+date: "2021-04-03"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book

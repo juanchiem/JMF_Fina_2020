@@ -1,0 +1,14 @@
+uso
+import
+superficies
+superficie-por-zona-campaña
+superficie-de-cultivos-zona
+rendimientos
+rindes-observados
+brechas
+manejo
+variedades
+superficies-tamaño-de-cuadrados-y-rendimientos-intensidad-de-color
+performance-variedades
+protección
+malezas
