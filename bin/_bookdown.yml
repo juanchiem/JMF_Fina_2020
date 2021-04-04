@@ -1,6 +1,10 @@
+new_session: true
 book_filename: "Analisis_de_campana"
 output_dir: "docs"
-new_session: false
+language:
+  ui:
+    chapter_name: ""
+    references_name: "Referencias "
 delete_merged_file: true
 
 rmd_files: [
