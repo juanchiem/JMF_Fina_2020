@@ -382,5 +382,3 @@ df20 %>%
   theme_bw2
 ```
 
-Se observa que no habria necesidad de la segunda aplicación en cultivares con buen comportamiento a royas... 
-
