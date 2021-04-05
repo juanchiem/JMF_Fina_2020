@@ -908,25 +908,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="malezas" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> Malezas</h1>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="07-malezas.html#cb106-1"></a>knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>, <span class="dt">warning=</span><span class="ot">FALSE</span>)</span>
-<span id="cb106-2"><a href="07-malezas.html#cb106-2"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, fuzzyjoin) </span>
-<span id="cb106-3"><a href="07-malezas.html#cb106-3"></a><span class="kw">load</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;data/data.Rdata&quot;</span>))</span>
-<span id="cb106-4"><a href="07-malezas.html#cb106-4"></a><span class="kw">source</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;0 themes.R&quot;</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="07-malezas.html#cb107-1"></a>dat <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb107-2"><a href="07-malezas.html#cb107-2"></a><span class="st">  </span><span class="kw">select</span>(campana, Zona, cultivo_de_cosecha, superficie, <span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb107-3"><a href="07-malezas.html#cb107-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
-<span id="cb107-4"><a href="07-malezas.html#cb107-4"></a>                <span class="op">~</span>stringi<span class="op">::</span><span class="kw">stri_trans_general</span>(., <span class="st">&quot;Latin-ASCII&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#sacar acentos</span></span>
-<span id="cb107-5"><a href="07-malezas.html#cb107-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
-<span id="cb107-6"><a href="07-malezas.html#cb107-6"></a>                <span class="op">~</span><span class="kw">str_to_upper</span>(<span class="kw">gsub</span>(<span class="st">&#39;,&#39;</span>, <span class="st">&#39;</span><span class="ch">\\</span><span class="st">.&#39;</span>,.)))) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># UPPER + sacar &quot;,&quot;</span></span>
-<span id="cb107-7"><a href="07-malezas.html#cb107-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
-<span id="cb107-8"><a href="07-malezas.html#cb107-8"></a>                <span class="op">~</span><span class="kw">str_replace</span>(., <span class="st">&quot;SP.&quot;</span>, <span class="st">&quot;&quot;</span>))) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># sacar SP.</span></span>
-<span id="cb107-9"><a href="07-malezas.html#cb107-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
-<span id="cb107-10"><a href="07-malezas.html#cb107-10"></a>                <span class="op">~</span><span class="kw">str_trim</span>(.))) -&gt;<span class="st"> </span>adv_herb   <span class="co">#sacar espacios antes-desp</span></span></code></pre></div>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="07-malezas.html#cb108-1"></a>adv_herb <span class="op">%&gt;%</span></span>
-<span id="cb108-2"><a href="07-malezas.html#cb108-2"></a><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>)), <span class="kw">any_vars</span>(<span class="op">!</span><span class="kw">is.na</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb108-3"><a href="07-malezas.html#cb108-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>(campana<span class="op">:</span>superficie), <span class="dt">names_to =</span> <span class="st">&quot;nivel&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;maleza&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb108-4"><a href="07-malezas.html#cb108-4"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>maleza <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="st">&quot;OTRO&quot;</span>, <span class="st">&quot;OTRA&quot;</span>, <span class="st">&quot;VARIAS&quot;</span>, <span class="st">&quot;ROSETA&quot;</span>))<span class="op">%&gt;%</span><span class="st">   </span></span>
-<span id="cb108-5"><a href="07-malezas.html#cb108-5"></a><span class="st">  </span><span class="kw">count</span>(maleza) </span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="07-malezas.html#cb105-1"></a>knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>, <span class="dt">warning=</span><span class="ot">FALSE</span>)</span>
+<span id="cb105-2"><a href="07-malezas.html#cb105-2"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, fuzzyjoin) </span>
+<span id="cb105-3"><a href="07-malezas.html#cb105-3"></a><span class="kw">load</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;data/data.Rdata&quot;</span>))</span>
+<span id="cb105-4"><a href="07-malezas.html#cb105-4"></a><span class="kw">source</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;0 themes.R&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="07-malezas.html#cb106-1"></a>dat <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb106-2"><a href="07-malezas.html#cb106-2"></a><span class="st">  </span><span class="kw">select</span>(campana, Zona, cultivo_de_cosecha, superficie, <span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb106-3"><a href="07-malezas.html#cb106-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
+<span id="cb106-4"><a href="07-malezas.html#cb106-4"></a>                <span class="op">~</span>stringi<span class="op">::</span><span class="kw">stri_trans_general</span>(., <span class="st">&quot;Latin-ASCII&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#sacar acentos</span></span>
+<span id="cb106-5"><a href="07-malezas.html#cb106-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
+<span id="cb106-6"><a href="07-malezas.html#cb106-6"></a>                <span class="op">~</span><span class="kw">str_to_upper</span>(<span class="kw">gsub</span>(<span class="st">&#39;,&#39;</span>, <span class="st">&#39;</span><span class="ch">\\</span><span class="st">.&#39;</span>,.)))) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># UPPER + sacar &quot;,&quot;</span></span>
+<span id="cb106-7"><a href="07-malezas.html#cb106-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
+<span id="cb106-8"><a href="07-malezas.html#cb106-8"></a>                <span class="op">~</span><span class="kw">str_replace</span>(., <span class="st">&quot;SP.&quot;</span>, <span class="st">&quot;&quot;</span>))) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># sacar SP.</span></span>
+<span id="cb106-9"><a href="07-malezas.html#cb106-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>), </span>
+<span id="cb106-10"><a href="07-malezas.html#cb106-10"></a>                <span class="op">~</span><span class="kw">str_trim</span>(.))) -&gt;<span class="st"> </span>adv_herb   <span class="co">#sacar espacios antes-desp</span></span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="07-malezas.html#cb107-1"></a>adv_herb <span class="op">%&gt;%</span></span>
+<span id="cb107-2"><a href="07-malezas.html#cb107-2"></a><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>)), <span class="kw">any_vars</span>(<span class="op">!</span><span class="kw">is.na</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb107-3"><a href="07-malezas.html#cb107-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>(campana<span class="op">:</span>superficie), <span class="dt">names_to =</span> <span class="st">&quot;nivel&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;maleza&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb107-4"><a href="07-malezas.html#cb107-4"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>maleza <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="st">&quot;OTRO&quot;</span>, <span class="st">&quot;OTRA&quot;</span>, <span class="st">&quot;VARIAS&quot;</span>, <span class="st">&quot;ROSETA&quot;</span>))<span class="op">%&gt;%</span><span class="st">   </span></span>
+<span id="cb107-5"><a href="07-malezas.html#cb107-5"></a><span class="st">  </span><span class="kw">count</span>(maleza) </span></code></pre></div>
 <pre><code>## # A tibble: 14 x 2
 ##    maleza          n
 ##    &lt;chr&gt;       &lt;int&gt;
@@ -944,9 +944,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 12 SONCHUS        53
 ## 13 TRIGO           2
 ## 14 VIOLA           4</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="07-malezas.html#cb110-1"></a>malezas_ref &lt;-<span class="st"> </span>gsheet<span class="op">::</span><span class="kw">gsheet2tbl</span>(<span class="st">&quot;https://docs.google.com/spreadsheets/d/1cTzo36jHRULfBf8c83TDpauxiwHrxeKrGprUUxLRzm0/edit#gid=1182890772&quot;</span>)</span>
-<span id="cb110-2"><a href="07-malezas.html#cb110-2"></a></span>
-<span id="cb110-3"><a href="07-malezas.html#cb110-3"></a>malezas_ref <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">n=</span><span class="ot">Inf</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="07-malezas.html#cb109-1"></a>malezas_ref &lt;-<span class="st"> </span>gsheet<span class="op">::</span><span class="kw">gsheet2tbl</span>(<span class="st">&quot;https://docs.google.com/spreadsheets/d/1cTzo36jHRULfBf8c83TDpauxiwHrxeKrGprUUxLRzm0/edit#gid=1182890772&quot;</span>)</span>
+<span id="cb109-2"><a href="07-malezas.html#cb109-2"></a></span>
+<span id="cb109-3"><a href="07-malezas.html#cb109-3"></a>malezas_ref <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">n=</span><span class="ot">Inf</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 33 x 4
 ##    genero      sp         n_comun        n_grupo 
 ##    &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;   
@@ -983,28 +983,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 31 TRICHLORIS  &lt;NA&gt;       TRICHLORIS     &lt;NA&gt;    
 ## 32 VIOLA       ARVENSIS   VIOLA          &lt;NA&gt;    
 ## 33 AMARANTHUS  QUITENSIS  YUYO COLORADO  &lt;NA&gt;</code></pre>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="07-malezas.html#cb112-1"></a><span class="co"># browseURL(&quot;https://docs.google.com/spreadsheets/d/1YL6vwgVu1nyMuZLRZw5uMav7cMt2mDXd7mI2S8Q6Q7c/edit#gid=950522321&quot;)</span></span>
-<span id="cb112-2"><a href="07-malezas.html#cb112-2"></a></span>
-<span id="cb112-3"><a href="07-malezas.html#cb112-3"></a>herb_long &lt;-<span class="st"> </span>adv_herb <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#count(especie_principal)</span></span>
-<span id="cb112-4"><a href="07-malezas.html#cb112-4"></a><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>)), <span class="kw">any_vars</span>(<span class="op">!</span><span class="kw">is.na</span>(.))) <span class="op">%&gt;%</span></span>
-<span id="cb112-5"><a href="07-malezas.html#cb112-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>(campana<span class="op">:</span>superficie), <span class="dt">names_to =</span> <span class="st">&quot;nivel&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;maleza&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb112-6"><a href="07-malezas.html#cb112-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>maleza <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="st">&quot;OTRO&quot;</span>, <span class="st">&quot;OTRA&quot;</span>, <span class="st">&quot;VARIAS&quot;</span>, <span class="st">&quot;ROSETA&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb112-7"><a href="07-malezas.html#cb112-7"></a><span class="st">   </span><span class="kw">stringdist_left_join</span>(malezas_ref <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(genero), </span>
-<span id="cb112-8"><a href="07-malezas.html#cb112-8"></a>                        <span class="dt">by =</span> <span class="kw">c</span>(<span class="dt">maleza =</span> <span class="st">&quot;genero&quot;</span>), <span class="dt">max_dist =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></span>
-<span id="cb112-9"><a href="07-malezas.html#cb112-9"></a><span class="st">   </span><span class="kw">stringdist_left_join</span>(malezas_ref <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(n_comun), </span>
-<span id="cb112-10"><a href="07-malezas.html#cb112-10"></a>                        <span class="dt">by =</span> <span class="kw">c</span>(<span class="dt">maleza =</span> <span class="st">&quot;n_comun&quot;</span>), <span class="dt">max_dist =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></span>
-<span id="cb112-11"><a href="07-malezas.html#cb112-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">maleza =</span> <span class="kw">coalesce</span>(n_comun.x,n_comun.y )) <span class="op">%&gt;%</span></span>
-<span id="cb112-12"><a href="07-malezas.html#cb112-12"></a><span class="st">         </span><span class="kw">select</span>(campana<span class="op">:</span>nivel, maleza)<span class="op">%&gt;%</span></span>
-<span id="cb112-13"><a href="07-malezas.html#cb112-13"></a><span class="st">  </span><span class="kw">group_by</span>(campana, Zona, nivel, maleza)<span class="op">%&gt;%</span></span>
-<span id="cb112-14"><a href="07-malezas.html#cb112-14"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">var_sup =</span> <span class="kw">sum</span>(superficie, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))<span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb112-15"><a href="07-malezas.html#cb112-15"></a><span class="st">  </span><span class="kw">group_by</span>(campana, Zona, nivel) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb112-16"><a href="07-malezas.html#cb112-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Zona=</span> <span class="kw">as.factor</span>(Zona),</span>
-<span id="cb112-17"><a href="07-malezas.html#cb112-17"></a>         <span class="dt">porcent=</span>var_sup<span class="op">/</span><span class="kw">sum</span>(var_sup)<span class="op">*</span><span class="dv">100</span>, </span>
-<span id="cb112-18"><a href="07-malezas.html#cb112-18"></a>         <span class="dt">nivel =</span> <span class="kw">recode</span>(nivel, <span class="dt">especie_principal =</span> <span class="st">&quot;1° Especie&quot;</span>, </span>
-<span id="cb112-19"><a href="07-malezas.html#cb112-19"></a>                        <span class="dt">especie_secundaria =</span> <span class="st">&quot;2° Especie&quot;</span>, </span>
-<span id="cb112-20"><a href="07-malezas.html#cb112-20"></a>                        <span class="dt">especie_terciaria=</span> <span class="st">&quot;3° Especie&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb112-21"><a href="07-malezas.html#cb112-21"></a><span class="st">  </span><span class="kw">drop_na</span>(maleza)</span>
-<span id="cb112-22"><a href="07-malezas.html#cb112-22"></a>herb_long</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="07-malezas.html#cb111-1"></a><span class="co"># browseURL(&quot;https://docs.google.com/spreadsheets/d/1YL6vwgVu1nyMuZLRZw5uMav7cMt2mDXd7mI2S8Q6Q7c/edit#gid=950522321&quot;)</span></span>
+<span id="cb111-2"><a href="07-malezas.html#cb111-2"></a></span>
+<span id="cb111-3"><a href="07-malezas.html#cb111-3"></a>herb_long &lt;-<span class="st"> </span>adv_herb <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#count(especie_principal)</span></span>
+<span id="cb111-4"><a href="07-malezas.html#cb111-4"></a><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(<span class="kw">starts_with</span>(<span class="st">&quot;especie&quot;</span>)), <span class="kw">any_vars</span>(<span class="op">!</span><span class="kw">is.na</span>(.))) <span class="op">%&gt;%</span></span>
+<span id="cb111-5"><a href="07-malezas.html#cb111-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>(campana<span class="op">:</span>superficie), <span class="dt">names_to =</span> <span class="st">&quot;nivel&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;maleza&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb111-6"><a href="07-malezas.html#cb111-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>maleza <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="ot">NA</span>, <span class="st">&quot;OTRO&quot;</span>, <span class="st">&quot;OTRA&quot;</span>, <span class="st">&quot;VARIAS&quot;</span>, <span class="st">&quot;ROSETA&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb111-7"><a href="07-malezas.html#cb111-7"></a><span class="st">   </span><span class="kw">stringdist_left_join</span>(malezas_ref <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(genero), </span>
+<span id="cb111-8"><a href="07-malezas.html#cb111-8"></a>                        <span class="dt">by =</span> <span class="kw">c</span>(<span class="dt">maleza =</span> <span class="st">&quot;genero&quot;</span>), <span class="dt">max_dist =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb111-9"><a href="07-malezas.html#cb111-9"></a><span class="st">   </span><span class="kw">stringdist_left_join</span>(malezas_ref <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(n_comun), </span>
+<span id="cb111-10"><a href="07-malezas.html#cb111-10"></a>                        <span class="dt">by =</span> <span class="kw">c</span>(<span class="dt">maleza =</span> <span class="st">&quot;n_comun&quot;</span>), <span class="dt">max_dist =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb111-11"><a href="07-malezas.html#cb111-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">maleza =</span> <span class="kw">coalesce</span>(n_comun.x,n_comun.y )) <span class="op">%&gt;%</span></span>
+<span id="cb111-12"><a href="07-malezas.html#cb111-12"></a><span class="st">         </span><span class="kw">select</span>(campana<span class="op">:</span>nivel, maleza)<span class="op">%&gt;%</span></span>
+<span id="cb111-13"><a href="07-malezas.html#cb111-13"></a><span class="st">  </span><span class="kw">group_by</span>(campana, Zona, nivel, maleza)<span class="op">%&gt;%</span></span>
+<span id="cb111-14"><a href="07-malezas.html#cb111-14"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">var_sup =</span> <span class="kw">sum</span>(superficie, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))<span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb111-15"><a href="07-malezas.html#cb111-15"></a><span class="st">  </span><span class="kw">group_by</span>(campana, Zona, nivel) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb111-16"><a href="07-malezas.html#cb111-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Zona=</span> <span class="kw">as.factor</span>(Zona),</span>
+<span id="cb111-17"><a href="07-malezas.html#cb111-17"></a>         <span class="dt">porcent=</span>var_sup<span class="op">/</span><span class="kw">sum</span>(var_sup)<span class="op">*</span><span class="dv">100</span>, </span>
+<span id="cb111-18"><a href="07-malezas.html#cb111-18"></a>         <span class="dt">nivel =</span> <span class="kw">recode</span>(nivel, <span class="dt">especie_principal =</span> <span class="st">&quot;1° Especie&quot;</span>, </span>
+<span id="cb111-19"><a href="07-malezas.html#cb111-19"></a>                        <span class="dt">especie_secundaria =</span> <span class="st">&quot;2° Especie&quot;</span>, </span>
+<span id="cb111-20"><a href="07-malezas.html#cb111-20"></a>                        <span class="dt">especie_terciaria=</span> <span class="st">&quot;3° Especie&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb111-21"><a href="07-malezas.html#cb111-21"></a><span class="st">  </span><span class="kw">drop_na</span>(maleza)</span>
+<span id="cb111-22"><a href="07-malezas.html#cb111-22"></a>herb_long</span></code></pre></div>
 <pre><code>## # A tibble: 98 x 6
 ## # Groups:   campana, Zona, nivel [26]
 ##    campana Zona  nivel      maleza      var_sup porcent
@@ -1020,43 +1020,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9 18-19   Costa 2° Especie CRUCIFERA      1353  33.5  
 ## 10 18-19   Costa 2° Especie RAIGRAS        1142  28.3  
 ## # … with 88 more rows</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="07-malezas.html#cb114-1"></a><span class="co"># herb_long %&gt;% write_sheet(ss=jmf, sheet = &quot;malezas&quot;)</span></span></code></pre></div>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="07-malezas.html#cb115-1"></a>plots_herb &lt;-<span class="st"> </span></span>
-<span id="cb115-2"><a href="07-malezas.html#cb115-2"></a><span class="st">  </span>herb_long <span class="op">%&gt;%</span></span>
-<span id="cb115-3"><a href="07-malezas.html#cb115-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>nivel <span class="op">==</span><span class="st"> &quot;3° Especie&quot;</span>)<span class="op">%&gt;%</span></span>
-<span id="cb115-4"><a href="07-malezas.html#cb115-4"></a><span class="st">  </span><span class="kw">group_by</span>(Zona) <span class="op">%&gt;%</span></span>
-<span id="cb115-5"><a href="07-malezas.html#cb115-5"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></span>
-<span id="cb115-6"><a href="07-malezas.html#cb115-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">plot =</span> <span class="kw">map2</span>(data, Zona, </span>
-<span id="cb115-7"><a href="07-malezas.html#cb115-7"></a>                     <span class="op">~</span><span class="kw">ggplot</span>(<span class="dt">data =</span> .x,  </span>
-<span id="cb115-8"><a href="07-malezas.html#cb115-8"></a>         <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(campana), </span>
-<span id="cb115-9"><a href="07-malezas.html#cb115-9"></a>             <span class="dt">y =</span> porcent, </span>
-<span id="cb115-10"><a href="07-malezas.html#cb115-10"></a>             <span class="dt">col =</span> maleza, </span>
-<span id="cb115-11"><a href="07-malezas.html#cb115-11"></a>             <span class="dt">group =</span> maleza))<span class="op">+</span></span>
-<span id="cb115-12"><a href="07-malezas.html#cb115-12"></a><span class="st">             </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
-<span id="cb115-13"><a href="07-malezas.html#cb115-13"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
-<span id="cb115-14"><a href="07-malezas.html#cb115-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="st">&quot;% del área de cada zona&quot;</span>,</span>
-<span id="cb115-15"><a href="07-malezas.html#cb115-15"></a>        <span class="dt">title =</span> <span class="kw">paste0</span>(<span class="st">&quot;Evolución de principales malezas -  Zona &quot;</span>, .y))<span class="op">+</span></span>
-<span id="cb115-16"><a href="07-malezas.html#cb115-16"></a><span class="st">  </span><span class="kw">guides</span>(<span class="dt">col=</span><span class="st">&quot;none&quot;</span>)<span class="op">+</span></span>
-<span id="cb115-17"><a href="07-malezas.html#cb115-17"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>nivel)<span class="op">+</span></span>
-<span id="cb115-18"><a href="07-malezas.html#cb115-18"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(</span>
-<span id="cb115-19"><a href="07-malezas.html#cb115-19"></a>    <span class="dt">data =</span> .x  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Zona <span class="op">==</span><span class="st"> </span>.y, campana <span class="op">==</span><span class="st"> &quot;20-21&quot;</span>),</span>
-<span id="cb115-20"><a href="07-malezas.html#cb115-20"></a>    <span class="kw">aes</span>(<span class="dt">label =</span> maleza), <span class="dt">size =</span><span class="dv">4</span>, <span class="dt">nudge_x =</span> <span class="fl">0.2</span>) <span class="op">+</span></span>
-<span id="cb115-21"><a href="07-malezas.html#cb115-21"></a><span class="st">   </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(</span>
-<span id="cb115-22"><a href="07-malezas.html#cb115-22"></a>    <span class="dt">data =</span> .x  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Zona <span class="op">==</span><span class="st"> </span>.y, campana <span class="op">==</span><span class="st"> &quot;18-19&quot;</span>),</span>
-<span id="cb115-23"><a href="07-malezas.html#cb115-23"></a>    <span class="kw">aes</span>(<span class="dt">label =</span> maleza), <span class="dt">size =</span><span class="dv">4</span>, <span class="dt">nudge_x =</span> <span class="fl">0.2</span>) <span class="op">+</span></span>
-<span id="cb115-24"><a href="07-malezas.html#cb115-24"></a><span class="st">   </span>theme_bw2</span>
-<span id="cb115-25"><a href="07-malezas.html#cb115-25"></a>))</span>
-<span id="cb115-26"><a href="07-malezas.html#cb115-26"></a>plots_herb<span class="op">$</span>plot</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="07-malezas.html#cb113-1"></a><span class="co"># herb_long %&gt;% write_sheet(ss=jmf, sheet = &quot;malezas&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="07-malezas.html#cb114-1"></a>plots_herb &lt;-<span class="st"> </span></span>
+<span id="cb114-2"><a href="07-malezas.html#cb114-2"></a><span class="st">  </span>herb_long <span class="op">%&gt;%</span></span>
+<span id="cb114-3"><a href="07-malezas.html#cb114-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>nivel <span class="op">==</span><span class="st"> &quot;3° Especie&quot;</span>)<span class="op">%&gt;%</span></span>
+<span id="cb114-4"><a href="07-malezas.html#cb114-4"></a><span class="st">  </span><span class="kw">group_by</span>(Zona) <span class="op">%&gt;%</span></span>
+<span id="cb114-5"><a href="07-malezas.html#cb114-5"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></span>
+<span id="cb114-6"><a href="07-malezas.html#cb114-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">plot =</span> <span class="kw">map2</span>(data, Zona, </span>
+<span id="cb114-7"><a href="07-malezas.html#cb114-7"></a>                     <span class="op">~</span><span class="kw">ggplot</span>(<span class="dt">data =</span> .x,  </span>
+<span id="cb114-8"><a href="07-malezas.html#cb114-8"></a>         <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(campana), </span>
+<span id="cb114-9"><a href="07-malezas.html#cb114-9"></a>             <span class="dt">y =</span> porcent, </span>
+<span id="cb114-10"><a href="07-malezas.html#cb114-10"></a>             <span class="dt">col =</span> maleza, </span>
+<span id="cb114-11"><a href="07-malezas.html#cb114-11"></a>             <span class="dt">group =</span> maleza))<span class="op">+</span></span>
+<span id="cb114-12"><a href="07-malezas.html#cb114-12"></a><span class="st">             </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb114-13"><a href="07-malezas.html#cb114-13"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
+<span id="cb114-14"><a href="07-malezas.html#cb114-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="st">&quot;% del área de cada zona&quot;</span>,</span>
+<span id="cb114-15"><a href="07-malezas.html#cb114-15"></a>        <span class="dt">title =</span> <span class="kw">paste0</span>(<span class="st">&quot;Evolución de principales malezas -  Zona &quot;</span>, .y))<span class="op">+</span></span>
+<span id="cb114-16"><a href="07-malezas.html#cb114-16"></a><span class="st">  </span><span class="kw">guides</span>(<span class="dt">col=</span><span class="st">&quot;none&quot;</span>)<span class="op">+</span></span>
+<span id="cb114-17"><a href="07-malezas.html#cb114-17"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>nivel)<span class="op">+</span></span>
+<span id="cb114-18"><a href="07-malezas.html#cb114-18"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(</span>
+<span id="cb114-19"><a href="07-malezas.html#cb114-19"></a>    <span class="dt">data =</span> .x  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Zona <span class="op">==</span><span class="st"> </span>.y, campana <span class="op">==</span><span class="st"> &quot;20-21&quot;</span>),</span>
+<span id="cb114-20"><a href="07-malezas.html#cb114-20"></a>    <span class="kw">aes</span>(<span class="dt">label =</span> maleza), <span class="dt">size =</span><span class="dv">4</span>, <span class="dt">nudge_x =</span> <span class="fl">0.2</span>) <span class="op">+</span></span>
+<span id="cb114-21"><a href="07-malezas.html#cb114-21"></a><span class="st">   </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(</span>
+<span id="cb114-22"><a href="07-malezas.html#cb114-22"></a>    <span class="dt">data =</span> .x  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Zona <span class="op">==</span><span class="st"> </span>.y, campana <span class="op">==</span><span class="st"> &quot;18-19&quot;</span>),</span>
+<span id="cb114-23"><a href="07-malezas.html#cb114-23"></a>    <span class="kw">aes</span>(<span class="dt">label =</span> maleza), <span class="dt">size =</span><span class="dv">4</span>, <span class="dt">nudge_x =</span> <span class="fl">0.2</span>) <span class="op">+</span></span>
+<span id="cb114-24"><a href="07-malezas.html#cb114-24"></a><span class="st">   </span>theme_bw2</span>
+<span id="cb114-25"><a href="07-malezas.html#cb114-25"></a>))</span>
+<span id="cb114-26"><a href="07-malezas.html#cb114-26"></a>plots_herb<span class="op">$</span>plot</span></code></pre></div>
 <pre><code>## [[1]]</code></pre>
-<p><img src="07-malezas_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-71-1.png" width="672" /></p>
 <pre><code>## 
 ## [[2]]</code></pre>
-<p><img src="07-malezas_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-71-2.png" width="672" /></p>
 <pre><code>## 
 ## [[3]]</code></pre>
-<p><img src="07-malezas_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="07-malezas.html#cb119-1"></a><span class="co"># file_names &lt;- paste0(&quot;adversidades/&quot;, levels(herb_long$Zona), &quot;_malezas.png&quot;)</span></span>
-<span id="cb119-2"><a href="07-malezas.html#cb119-2"></a><span class="co"># map2(file_names, plots_herb$plot, ggsave) </span></span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-71-3.png" width="672" /></p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="07-malezas.html#cb118-1"></a><span class="co"># file_names &lt;- paste0(&quot;adversidades/&quot;, levels(herb_long$Zona), &quot;_malezas.png&quot;)</span></span>
+<span id="cb118-2"><a href="07-malezas.html#cb118-2"></a><span class="co"># map2(file_names, plots_herb$plot, ggsave) </span></span></code></pre></div>
 
 </div>
             </section>

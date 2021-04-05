@@ -908,30 +908,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="variedades" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Variedades</h1>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="05-variedades.html#cb48-1"></a>knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>, <span class="dt">warning=</span><span class="ot">FALSE</span>)</span>
-<span id="cb48-2"><a href="05-variedades.html#cb48-2"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse)</span>
-<span id="cb48-3"><a href="05-variedades.html#cb48-3"></a><span class="co"># pacman::p_load(tidyverse, googlesheets4, googledrive)</span></span>
-<span id="cb48-4"><a href="05-variedades.html#cb48-4"></a><span class="co"># javi &lt;- gs4_get(&quot;1jTFU8fQw2fiTyfrhuPSjc4lcAC6U9G-zjvOlADQ6JNE&quot;)</span></span>
-<span id="cb48-5"><a href="05-variedades.html#cb48-5"></a><span class="co"># gs4_browse(javi)</span></span>
-<span id="cb48-6"><a href="05-variedades.html#cb48-6"></a><span class="co"># drive_auth(email = &quot;edwardsmolina@gmail.com&quot;)</span></span>
-<span id="cb48-7"><a href="05-variedades.html#cb48-7"></a><span class="co"># gs4_auth(email = &quot;edwardsmolina@gmail.com&quot;)</span></span>
-<span id="cb48-8"><a href="05-variedades.html#cb48-8"></a><span class="kw">source</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;0 themes.R&quot;</span>))</span>
-<span id="cb48-9"><a href="05-variedades.html#cb48-9"></a><span class="kw">load</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;data/data.Rdata&quot;</span>))</span>
-<span id="cb48-10"><a href="05-variedades.html#cb48-10"></a><span class="co"># glimpse(dat)</span></span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="05-variedades.html#cb49-1"></a>dat <span class="op">%&gt;%</span></span>
-<span id="cb49-2"><a href="05-variedades.html#cb49-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Tr|Ceb&#39;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb49-3"><a href="05-variedades.html#cb49-3"></a><span class="st">  </span><span class="kw">select</span>(cultivo_de_cosecha, campana,Zona, variedad, rinde, superficie ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-4"><a href="05-variedades.html#cb49-4"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, variedad) <span class="op">%&gt;%</span></span>
-<span id="cb49-5"><a href="05-variedades.html#cb49-5"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">n</span>() <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-6"><a href="05-variedades.html#cb49-6"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-7"><a href="05-variedades.html#cb49-7"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, campana, variedad) <span class="op">%&gt;%</span></span>
-<span id="cb49-8"><a href="05-variedades.html#cb49-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="co">#var_lotes= n(), </span></span>
-<span id="cb49-9"><a href="05-variedades.html#cb49-9"></a>    <span class="dt">var_sup =</span> <span class="kw">sum</span>(superficie, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb49-10"><a href="05-variedades.html#cb49-10"></a>    <span class="dt">rinde_medio =</span> <span class="kw">median</span>(rinde, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), </span>
-<span id="cb49-11"><a href="05-variedades.html#cb49-11"></a>    <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-12"><a href="05-variedades.html#cb49-12"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, campana) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-13"><a href="05-variedades.html#cb49-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">porcent=</span>var_sup<span class="op">/</span><span class="kw">sum</span>(var_sup)<span class="op">*</span><span class="dv">100</span>) -&gt;<span class="st"> </span>dat_var</span>
-<span id="cb49-14"><a href="05-variedades.html#cb49-14"></a>dat_var</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="05-variedades.html#cb47-1"></a>knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>, <span class="dt">warning=</span><span class="ot">FALSE</span>)</span>
+<span id="cb47-2"><a href="05-variedades.html#cb47-2"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse)</span>
+<span id="cb47-3"><a href="05-variedades.html#cb47-3"></a><span class="co"># pacman::p_load(tidyverse, googlesheets4, googledrive)</span></span>
+<span id="cb47-4"><a href="05-variedades.html#cb47-4"></a><span class="co"># javi &lt;- gs4_get(&quot;1jTFU8fQw2fiTyfrhuPSjc4lcAC6U9G-zjvOlADQ6JNE&quot;)</span></span>
+<span id="cb47-5"><a href="05-variedades.html#cb47-5"></a><span class="co"># gs4_browse(javi)</span></span>
+<span id="cb47-6"><a href="05-variedades.html#cb47-6"></a><span class="co"># drive_auth(email = &quot;edwardsmolina@gmail.com&quot;)</span></span>
+<span id="cb47-7"><a href="05-variedades.html#cb47-7"></a><span class="co"># gs4_auth(email = &quot;edwardsmolina@gmail.com&quot;)</span></span>
+<span id="cb47-8"><a href="05-variedades.html#cb47-8"></a><span class="kw">source</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;0 themes.R&quot;</span>))</span>
+<span id="cb47-9"><a href="05-variedades.html#cb47-9"></a><span class="kw">load</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;data/data.Rdata&quot;</span>))</span>
+<span id="cb47-10"><a href="05-variedades.html#cb47-10"></a><span class="co"># glimpse(dat)</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="05-variedades.html#cb48-1"></a>dat <span class="op">%&gt;%</span></span>
+<span id="cb48-2"><a href="05-variedades.html#cb48-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Tr|Ceb&#39;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb48-3"><a href="05-variedades.html#cb48-3"></a><span class="st">  </span><span class="kw">select</span>(cultivo_de_cosecha, campana,Zona, variedad, rinde, superficie ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb48-4"><a href="05-variedades.html#cb48-4"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, variedad) <span class="op">%&gt;%</span></span>
+<span id="cb48-5"><a href="05-variedades.html#cb48-5"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">n</span>() <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb48-6"><a href="05-variedades.html#cb48-6"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb48-7"><a href="05-variedades.html#cb48-7"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, campana, variedad) <span class="op">%&gt;%</span></span>
+<span id="cb48-8"><a href="05-variedades.html#cb48-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="co">#var_lotes= n(), </span></span>
+<span id="cb48-9"><a href="05-variedades.html#cb48-9"></a>    <span class="dt">var_sup =</span> <span class="kw">sum</span>(superficie, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb48-10"><a href="05-variedades.html#cb48-10"></a>    <span class="dt">rinde_medio =</span> <span class="kw">median</span>(rinde, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), </span>
+<span id="cb48-11"><a href="05-variedades.html#cb48-11"></a>    <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb48-12"><a href="05-variedades.html#cb48-12"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, campana) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb48-13"><a href="05-variedades.html#cb48-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">porcent=</span>var_sup<span class="op">/</span><span class="kw">sum</span>(var_sup)<span class="op">*</span><span class="dv">100</span>) -&gt;<span class="st"> </span>dat_var</span>
+<span id="cb48-14"><a href="05-variedades.html#cb48-14"></a>dat_var</span></code></pre></div>
 <pre><code>## # A tibble: 82 x 7
 ## # Groups:   cultivo_de_cosecha, Zona, campana [26]
 ##    cultivo_de_cosecha Zona      campana variedad var_sup rinde_medio porcent
@@ -947,193 +947,193 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  9 Cebada             Madariaga 18-19   OVERTURE     66        5665     11.9
 ## 10 Cebada             Madariaga 19-20   ANDREIA     118.       6024     60.6
 ## # … with 72 more rows</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="05-variedades.html#cb51-1"></a>dat_var <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#data.frame</span></span>
-<span id="cb51-2"><a href="05-variedades.html#cb51-2"></a><span class="st">  </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st">&quot;Cebada&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb51-3"><a href="05-variedades.html#cb51-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span><span class="kw">factor</span>(<span class="dv">1</span>), <span class="dt">y =</span> porcent, <span class="dt">fill =</span> variedad)) <span class="op">+</span></span>
-<span id="cb51-4"><a href="05-variedades.html#cb51-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&#39;identity&#39;</span>) <span class="op">+</span></span>
-<span id="cb51-5"><a href="05-variedades.html#cb51-5"></a><span class="st">  </span><span class="kw">coord_polar</span>(<span class="dt">theta =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
-<span id="cb51-6"><a href="05-variedades.html#cb51-6"></a><span class="st">  </span><span class="kw">facet_grid</span>(Zona <span class="op">~</span><span class="st"> </span>campana, <span class="dt">switch =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
-<span id="cb51-7"><a href="05-variedades.html#cb51-7"></a><span class="st">  </span><span class="kw">theme_void</span>()<span class="op">+</span></span>
-<span id="cb51-8"><a href="05-variedades.html#cb51-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">paste0</span>(<span class="kw">round</span>(porcent))), </span>
-<span id="cb51-9"><a href="05-variedades.html#cb51-9"></a>            <span class="dt">position=</span><span class="kw">position_stack</span>(<span class="dt">vjust=</span><span class="fl">0.5</span>), <span class="dt">color=</span><span class="st">&quot;white&quot;</span>,<span class="dt">size=</span><span class="dv">3</span>, <span class="dt">fontface =</span><span class="st">&quot;bold&quot;</span>)<span class="op">+</span></span>
-<span id="cb51-10"><a href="05-variedades.html#cb51-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)<span class="op">+</span></span>
-<span id="cb51-11"><a href="05-variedades.html#cb51-11"></a><span class="st">  </span><span class="kw">scale_fill_viridis_d</span>(<span class="dt">begin =</span> <span class="dv">0</span>, <span class="dt">end =</span><span class="fl">0.8</span>, <span class="dt">direction =</span> <span class="dv">-1</span>)</span></code></pre></div>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="05-variedades.html#cb52-1"></a><span class="co"># ggsave(last_plot(), file = &quot;plots/sup_var_zona_ceb.png&quot;, width = 7, height = 4)</span></span>
-<span id="cb52-2"><a href="05-variedades.html#cb52-2"></a><span class="co"># drive_upload(path = as_dribble(&quot;juanchi_guille/JMF_fina_2020&quot;), &quot;plots/sup_var_zona_ceb.png&quot;, overwrite = TRUE)</span></span></code></pre></div>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="05-variedades.html#cb53-1"></a>dat_var <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#data.frame</span></span>
-<span id="cb53-2"><a href="05-variedades.html#cb53-2"></a><span class="st">  </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st">&quot;Trigo&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-3"><a href="05-variedades.html#cb53-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span><span class="kw">factor</span>(<span class="dv">1</span>), <span class="dt">y =</span> porcent, <span class="dt">fill =</span> variedad)) <span class="op">+</span></span>
-<span id="cb53-4"><a href="05-variedades.html#cb53-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&#39;identity&#39;</span>) <span class="op">+</span></span>
-<span id="cb53-5"><a href="05-variedades.html#cb53-5"></a><span class="st">  </span><span class="kw">coord_polar</span>(<span class="dt">theta =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
-<span id="cb53-6"><a href="05-variedades.html#cb53-6"></a><span class="st">  </span><span class="kw">facet_grid</span>(Zona <span class="op">~</span><span class="st"> </span>campana, <span class="dt">switch =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
-<span id="cb53-7"><a href="05-variedades.html#cb53-7"></a><span class="st">  </span><span class="kw">theme_void</span>()<span class="op">+</span></span>
-<span id="cb53-8"><a href="05-variedades.html#cb53-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">paste0</span>(<span class="kw">round</span>(porcent))), </span>
-<span id="cb53-9"><a href="05-variedades.html#cb53-9"></a>            <span class="dt">position=</span><span class="kw">position_stack</span>(<span class="dt">vjust=</span><span class="fl">0.5</span>), <span class="dt">color=</span><span class="st">&quot;white&quot;</span>,<span class="dt">size=</span><span class="dv">3</span>, <span class="dt">fontface =</span><span class="st">&quot;bold&quot;</span>)<span class="op">+</span></span>
-<span id="cb53-10"><a href="05-variedades.html#cb53-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)<span class="op">+</span></span>
-<span id="cb53-11"><a href="05-variedades.html#cb53-11"></a><span class="st">  </span><span class="kw">scale_fill_hue</span>()</span></code></pre></div>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="05-variedades.html#cb54-1"></a><span class="co"># ggsave(last_plot(), file = &quot;plots/sup_var_zona_tr1.png&quot;, width = 7, height = 4)</span></span></code></pre></div>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="05-variedades.html#cb55-1"></a>dat_var <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-2"><a href="05-variedades.html#cb55-2"></a><span class="st">  </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Trigo&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb55-3"><a href="05-variedades.html#cb55-3"></a><span class="st">    </span><span class="co"># filter(variedad == &quot;Andreia&quot;) </span></span>
-<span id="cb55-4"><a href="05-variedades.html#cb55-4"></a><span class="st">  </span><span class="co"># drop_na(rinde) %&gt;%</span></span>
-<span id="cb55-5"><a href="05-variedades.html#cb55-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(campana), </span>
-<span id="cb55-6"><a href="05-variedades.html#cb55-6"></a>             <span class="dt">y =</span> porcent, </span>
-<span id="cb55-7"><a href="05-variedades.html#cb55-7"></a>             <span class="dt">col =</span> variedad, </span>
-<span id="cb55-8"><a href="05-variedades.html#cb55-8"></a>             <span class="dt">group =</span>variedad))<span class="op">+</span></span>
-<span id="cb55-9"><a href="05-variedades.html#cb55-9"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span><span class="kw">geom_point</span>()<span class="op">+</span></span>
-<span id="cb55-10"><a href="05-variedades.html#cb55-10"></a><span class="st">  </span><span class="kw">facet_grid</span>(Zona<span class="op">~</span>.)<span class="op">+</span></span>
-<span id="cb55-11"><a href="05-variedades.html#cb55-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="st">&quot;% del área de cada zona&quot;</span>,  <span class="dt">col=</span><span class="st">&quot;&quot;</span>,</span>
-<span id="cb55-12"><a href="05-variedades.html#cb55-12"></a>       <span class="dt">title =</span> <span class="st">&quot;Evolucion de superficie de trigo&quot;</span>)<span class="op">+</span></span>
-<span id="cb55-13"><a href="05-variedades.html#cb55-13"></a><span class="st">  </span><span class="co"># guides(col=&quot;none&quot;)+</span></span>
-<span id="cb55-14"><a href="05-variedades.html#cb55-14"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(</span>
-<span id="cb55-15"><a href="05-variedades.html#cb55-15"></a>    <span class="dt">data =</span> dat_var <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-16"><a href="05-variedades.html#cb55-16"></a><span class="st">        </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Trigo&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb55-17"><a href="05-variedades.html#cb55-17"></a><span class="st">      </span><span class="kw">filter</span>(campana <span class="op">==</span><span class="st"> &quot;19-20&quot;</span>),</span>
-<span id="cb55-18"><a href="05-variedades.html#cb55-18"></a>      <span class="co"># drop_na(tecno_sts),</span></span>
-<span id="cb55-19"><a href="05-variedades.html#cb55-19"></a>    <span class="kw">aes</span>(<span class="dt">label =</span> variedad), <span class="dt">size =</span><span class="dv">3</span>, <span class="dt">nudge_x =</span> <span class="fl">0.1</span>) <span class="op">+</span></span>
-<span id="cb55-20"><a href="05-variedades.html#cb55-20"></a><span class="st">  </span>theme_dens1</span></code></pre></div>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="05-variedades.html#cb56-1"></a><span class="co"># ggsave(last_plot(), file = &quot;plots/evolucion_trigo.png&quot;, w =7, h=4)</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="05-variedades.html#cb50-1"></a>dat_var <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#data.frame</span></span>
+<span id="cb50-2"><a href="05-variedades.html#cb50-2"></a><span class="st">  </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st">&quot;Cebada&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-3"><a href="05-variedades.html#cb50-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span><span class="kw">factor</span>(<span class="dv">1</span>), <span class="dt">y =</span> porcent, <span class="dt">fill =</span> variedad)) <span class="op">+</span></span>
+<span id="cb50-4"><a href="05-variedades.html#cb50-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&#39;identity&#39;</span>) <span class="op">+</span></span>
+<span id="cb50-5"><a href="05-variedades.html#cb50-5"></a><span class="st">  </span><span class="kw">coord_polar</span>(<span class="dt">theta =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
+<span id="cb50-6"><a href="05-variedades.html#cb50-6"></a><span class="st">  </span><span class="kw">facet_grid</span>(Zona <span class="op">~</span><span class="st"> </span>campana, <span class="dt">switch =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
+<span id="cb50-7"><a href="05-variedades.html#cb50-7"></a><span class="st">  </span><span class="kw">theme_void</span>()<span class="op">+</span></span>
+<span id="cb50-8"><a href="05-variedades.html#cb50-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">paste0</span>(<span class="kw">round</span>(porcent))), </span>
+<span id="cb50-9"><a href="05-variedades.html#cb50-9"></a>            <span class="dt">position=</span><span class="kw">position_stack</span>(<span class="dt">vjust=</span><span class="fl">0.5</span>), <span class="dt">color=</span><span class="st">&quot;white&quot;</span>,<span class="dt">size=</span><span class="dv">3</span>, <span class="dt">fontface =</span><span class="st">&quot;bold&quot;</span>)<span class="op">+</span></span>
+<span id="cb50-10"><a href="05-variedades.html#cb50-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)<span class="op">+</span></span>
+<span id="cb50-11"><a href="05-variedades.html#cb50-11"></a><span class="st">  </span><span class="kw">scale_fill_viridis_d</span>(<span class="dt">begin =</span> <span class="dv">0</span>, <span class="dt">end =</span><span class="fl">0.8</span>, <span class="dt">direction =</span> <span class="dv">-1</span>)</span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="05-variedades.html#cb51-1"></a><span class="co"># ggsave(last_plot(), file = &quot;plots/sup_var_zona_ceb.png&quot;, width = 7, height = 4)</span></span>
+<span id="cb51-2"><a href="05-variedades.html#cb51-2"></a><span class="co"># drive_upload(path = as_dribble(&quot;juanchi_guille/JMF_fina_2020&quot;), &quot;plots/sup_var_zona_ceb.png&quot;, overwrite = TRUE)</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="05-variedades.html#cb52-1"></a>dat_var <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#data.frame</span></span>
+<span id="cb52-2"><a href="05-variedades.html#cb52-2"></a><span class="st">  </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st">&quot;Trigo&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb52-3"><a href="05-variedades.html#cb52-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span><span class="kw">factor</span>(<span class="dv">1</span>), <span class="dt">y =</span> porcent, <span class="dt">fill =</span> variedad)) <span class="op">+</span></span>
+<span id="cb52-4"><a href="05-variedades.html#cb52-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&#39;identity&#39;</span>) <span class="op">+</span></span>
+<span id="cb52-5"><a href="05-variedades.html#cb52-5"></a><span class="st">  </span><span class="kw">coord_polar</span>(<span class="dt">theta =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
+<span id="cb52-6"><a href="05-variedades.html#cb52-6"></a><span class="st">  </span><span class="kw">facet_grid</span>(Zona <span class="op">~</span><span class="st"> </span>campana, <span class="dt">switch =</span> <span class="st">&quot;y&quot;</span>)<span class="op">+</span></span>
+<span id="cb52-7"><a href="05-variedades.html#cb52-7"></a><span class="st">  </span><span class="kw">theme_void</span>()<span class="op">+</span></span>
+<span id="cb52-8"><a href="05-variedades.html#cb52-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">paste0</span>(<span class="kw">round</span>(porcent))), </span>
+<span id="cb52-9"><a href="05-variedades.html#cb52-9"></a>            <span class="dt">position=</span><span class="kw">position_stack</span>(<span class="dt">vjust=</span><span class="fl">0.5</span>), <span class="dt">color=</span><span class="st">&quot;white&quot;</span>,<span class="dt">size=</span><span class="dv">3</span>, <span class="dt">fontface =</span><span class="st">&quot;bold&quot;</span>)<span class="op">+</span></span>
+<span id="cb52-10"><a href="05-variedades.html#cb52-10"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)<span class="op">+</span></span>
+<span id="cb52-11"><a href="05-variedades.html#cb52-11"></a><span class="st">  </span><span class="kw">scale_fill_hue</span>()</span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="05-variedades.html#cb53-1"></a><span class="co"># ggsave(last_plot(), file = &quot;plots/sup_var_zona_tr1.png&quot;, width = 7, height = 4)</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="05-variedades.html#cb54-1"></a>dat_var <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-2"><a href="05-variedades.html#cb54-2"></a><span class="st">  </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Trigo&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb54-3"><a href="05-variedades.html#cb54-3"></a><span class="st">    </span><span class="co"># filter(variedad == &quot;Andreia&quot;) </span></span>
+<span id="cb54-4"><a href="05-variedades.html#cb54-4"></a><span class="st">  </span><span class="co"># drop_na(rinde) %&gt;%</span></span>
+<span id="cb54-5"><a href="05-variedades.html#cb54-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(campana), </span>
+<span id="cb54-6"><a href="05-variedades.html#cb54-6"></a>             <span class="dt">y =</span> porcent, </span>
+<span id="cb54-7"><a href="05-variedades.html#cb54-7"></a>             <span class="dt">col =</span> variedad, </span>
+<span id="cb54-8"><a href="05-variedades.html#cb54-8"></a>             <span class="dt">group =</span>variedad))<span class="op">+</span></span>
+<span id="cb54-9"><a href="05-variedades.html#cb54-9"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span><span class="kw">geom_point</span>()<span class="op">+</span></span>
+<span id="cb54-10"><a href="05-variedades.html#cb54-10"></a><span class="st">  </span><span class="kw">facet_grid</span>(Zona<span class="op">~</span>.)<span class="op">+</span></span>
+<span id="cb54-11"><a href="05-variedades.html#cb54-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="st">&quot;% del área de cada zona&quot;</span>,  <span class="dt">col=</span><span class="st">&quot;&quot;</span>,</span>
+<span id="cb54-12"><a href="05-variedades.html#cb54-12"></a>       <span class="dt">title =</span> <span class="st">&quot;Evolucion de superficie de trigo&quot;</span>)<span class="op">+</span></span>
+<span id="cb54-13"><a href="05-variedades.html#cb54-13"></a><span class="st">  </span><span class="co"># guides(col=&quot;none&quot;)+</span></span>
+<span id="cb54-14"><a href="05-variedades.html#cb54-14"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_text_repel</span>(</span>
+<span id="cb54-15"><a href="05-variedades.html#cb54-15"></a>    <span class="dt">data =</span> dat_var <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-16"><a href="05-variedades.html#cb54-16"></a><span class="st">        </span><span class="kw">filter</span>(cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Trigo&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb54-17"><a href="05-variedades.html#cb54-17"></a><span class="st">      </span><span class="kw">filter</span>(campana <span class="op">==</span><span class="st"> &quot;19-20&quot;</span>),</span>
+<span id="cb54-18"><a href="05-variedades.html#cb54-18"></a>      <span class="co"># drop_na(tecno_sts),</span></span>
+<span id="cb54-19"><a href="05-variedades.html#cb54-19"></a>    <span class="kw">aes</span>(<span class="dt">label =</span> variedad), <span class="dt">size =</span><span class="dv">3</span>, <span class="dt">nudge_x =</span> <span class="fl">0.1</span>) <span class="op">+</span></span>
+<span id="cb54-20"><a href="05-variedades.html#cb54-20"></a><span class="st">  </span>theme_dens1</span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="05-variedades.html#cb55-1"></a><span class="co"># ggsave(last_plot(), file = &quot;plots/evolucion_trigo.png&quot;, w =7, h=4)</span></span></code></pre></div>
 <div id="superficies-tamaño-de-cuadrados-y-rendimientos-intensidad-de-color" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Superficies (tamaño de cuadrados) y rendimientos (intensidad de color)</h2>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="05-variedades.html#cb57-1"></a><span class="kw">library</span>(treemap)</span></code></pre></div>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="05-variedades.html#cb58-1"></a>dat_sum &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb58-2"><a href="05-variedades.html#cb58-2"></a><span class="st">  </span><span class="co"># filter(cultivo_de_cosecha == &quot;Trigo&quot;) %&gt;% </span></span>
-<span id="cb58-3"><a href="05-variedades.html#cb58-3"></a><span class="st">  </span><span class="co"># filter(campana == &quot;19-20&quot;) %&gt;% </span></span>
-<span id="cb58-4"><a href="05-variedades.html#cb58-4"></a><span class="st">  </span><span class="co"># group_by(variedad) %&gt;%</span></span>
-<span id="cb58-5"><a href="05-variedades.html#cb58-5"></a><span class="st">  </span><span class="co"># filter(n()&gt;10) %&gt;% ungroup %&gt;%</span></span>
-<span id="cb58-6"><a href="05-variedades.html#cb58-6"></a><span class="st">  </span><span class="kw">group_by</span>(campana, cultivo_de_cosecha, variedad) <span class="op">%&gt;%</span></span>
-<span id="cb58-7"><a href="05-variedades.html#cb58-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">lotes=</span> <span class="kw">n</span>(), </span>
-<span id="cb58-8"><a href="05-variedades.html#cb58-8"></a>            <span class="dt">sup =</span> <span class="kw">sum</span>(superficie, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb58-9"><a href="05-variedades.html#cb58-9"></a>            <span class="dt">rinde_medio =</span> <span class="kw">median</span>(rinde, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb58-10"><a href="05-variedades.html#cb58-10"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor)<span class="op">%&gt;%</span></span>
-<span id="cb58-11"><a href="05-variedades.html#cb58-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">paste</span>(variedad, <span class="kw">round</span>(sup,<span class="dv">0</span>), <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)) </span></code></pre></div>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="05-variedades.html#cb59-1"></a><span class="co"># png(filename=&quot;plots/treemap_trigo_17-18.png&quot;, </span></span>
-<span id="cb59-2"><a href="05-variedades.html#cb59-2"></a><span class="co">#     width = 120, height = 120, units=&#39;mm&#39;, res = 300)</span></span>
-<span id="cb59-3"><a href="05-variedades.html#cb59-3"></a></span>
-<span id="cb59-4"><a href="05-variedades.html#cb59-4"></a><span class="kw">subset</span>(dat_sum, </span>
-<span id="cb59-5"><a href="05-variedades.html#cb59-5"></a>       cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Trigo&quot;</span> <span class="op">&amp;</span><span class="st"> </span></span>
-<span id="cb59-6"><a href="05-variedades.html#cb59-6"></a><span class="st">       </span>campana <span class="op">==</span><span class="st"> &#39;17-18&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb59-7"><a href="05-variedades.html#cb59-7"></a><span class="st">  </span><span class="kw">treemap</span>(<span class="dt">index=</span><span class="st">&quot;label&quot;</span>,</span>
-<span id="cb59-8"><a href="05-variedades.html#cb59-8"></a>          <span class="dt">vSize=</span><span class="st">&quot;sup&quot;</span>,</span>
-<span id="cb59-9"><a href="05-variedades.html#cb59-9"></a>          <span class="dt">vColor=</span><span class="st">&quot;rinde_medio&quot;</span>,</span>
-<span id="cb59-10"><a href="05-variedades.html#cb59-10"></a>          <span class="co"># border.col=c(&quot;grey70&quot;, &quot;grey90&quot;),</span></span>
-<span id="cb59-11"><a href="05-variedades.html#cb59-11"></a>          <span class="co"># palette=&quot;Spectral&quot;,</span></span>
-<span id="cb59-12"><a href="05-variedades.html#cb59-12"></a>          <span class="dt">type =</span> <span class="st">&quot;value&quot;</span>,</span>
-<span id="cb59-13"><a href="05-variedades.html#cb59-13"></a>          <span class="dt">title =</span> <span class="st">&quot;Superficie de trigo (has) - 2017/18&quot;</span>,</span>
-<span id="cb59-14"><a href="05-variedades.html#cb59-14"></a>          <span class="dt">title.legend =</span> <span class="st">&quot;Rendimiento medio (qq/ha)&quot;</span>,</span>
-<span id="cb59-15"><a href="05-variedades.html#cb59-15"></a>          <span class="dt">overlap.labels=</span><span class="dv">1</span>, </span>
-<span id="cb59-16"><a href="05-variedades.html#cb59-16"></a>          <span class="dt">bg.labels=</span><span class="kw">c</span>(<span class="st">&quot;transparent&quot;</span>),              </span>
-<span id="cb59-17"><a href="05-variedades.html#cb59-17"></a>          <span class="dt">inflate.labels=</span>F,</span>
-<span id="cb59-18"><a href="05-variedades.html#cb59-18"></a>          <span class="dt">align.labels=</span><span class="kw">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;center&quot;</span>)) </span></code></pre></div>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="05-variedades.html#cb60-1"></a><span class="co"># dev.off()</span></span>
-<span id="cb60-2"><a href="05-variedades.html#cb60-2"></a></span>
-<span id="cb60-3"><a href="05-variedades.html#cb60-3"></a><span class="co"># drive_upload(path = as_dribble(&quot;juanchi_guille/JMF_fina_2020&quot;), &quot;plots/treemap_trigo_17-18.png&quot;, overwrite = TRUE)</span></span></code></pre></div>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="05-variedades.html#cb61-1"></a>evol_trigo &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;plots&quot;</span>), </span>
-<span id="cb61-2"><a href="05-variedades.html#cb61-2"></a>                         <span class="dt">pattern =</span> <span class="st">&quot;treemap_&quot;</span>, </span>
-<span id="cb61-3"><a href="05-variedades.html#cb61-3"></a>                         <span class="dt">all.files =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb61-4"><a href="05-variedades.html#cb61-4"></a>evol_trigo <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb61-5"><a href="05-variedades.html#cb61-5"></a><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">drive_upload</span>(.,</span>
-<span id="cb61-6"><a href="05-variedades.html#cb61-6"></a>                     <span class="dt">path =</span> <span class="kw">as_dribble</span>(<span class="st">&quot;juanchi_guille/JMF_fina_2020&quot;</span>),</span>
-<span id="cb61-7"><a href="05-variedades.html#cb61-7"></a>                     <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb61-8"><a href="05-variedades.html#cb61-8"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="05-variedades.html#cb62-1"></a><span class="co"># png(filename=&quot;plots/treemap_cebada.png&quot;, </span></span>
-<span id="cb62-2"><a href="05-variedades.html#cb62-2"></a><span class="co">#     width = 120, height = 120, units=&#39;mm&#39;, res = 300)</span></span>
-<span id="cb62-3"><a href="05-variedades.html#cb62-3"></a></span>
-<span id="cb62-4"><a href="05-variedades.html#cb62-4"></a><span class="kw">subset</span>(dat_sum, </span>
-<span id="cb62-5"><a href="05-variedades.html#cb62-5"></a>       cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Cebada&quot;</span> ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb62-6"><a href="05-variedades.html#cb62-6"></a><span class="st">  </span><span class="kw">treemap</span>(<span class="dt">index=</span><span class="kw">c</span>(<span class="st">&quot;campana&quot;</span>, <span class="st">&quot;label&quot;</span>),</span>
-<span id="cb62-7"><a href="05-variedades.html#cb62-7"></a>          <span class="dt">vSize=</span><span class="st">&quot;sup&quot;</span>,</span>
-<span id="cb62-8"><a href="05-variedades.html#cb62-8"></a>          <span class="dt">vColor=</span><span class="st">&quot;rinde_medio&quot;</span>,</span>
-<span id="cb62-9"><a href="05-variedades.html#cb62-9"></a>          <span class="co"># border.col=c(&quot;grey70&quot;, &quot;grey90&quot;),</span></span>
-<span id="cb62-10"><a href="05-variedades.html#cb62-10"></a>          <span class="co"># palette=&quot;Spectral&quot;,</span></span>
-<span id="cb62-11"><a href="05-variedades.html#cb62-11"></a>          <span class="dt">type =</span> <span class="st">&quot;value&quot;</span>,</span>
-<span id="cb62-12"><a href="05-variedades.html#cb62-12"></a>          <span class="dt">title =</span> <span class="st">&quot;Superficie de cebada (has)&quot;</span>,</span>
-<span id="cb62-13"><a href="05-variedades.html#cb62-13"></a>          <span class="dt">title.legend =</span> <span class="st">&quot;Rendimiento medio (qq/ha)&quot;</span>,</span>
-<span id="cb62-14"><a href="05-variedades.html#cb62-14"></a>          <span class="dt">overlap.labels=</span><span class="dv">1</span>, </span>
-<span id="cb62-15"><a href="05-variedades.html#cb62-15"></a>          <span class="dt">bg.labels=</span><span class="kw">c</span>(<span class="st">&quot;transparent&quot;</span>),              <span class="co"># Background color of labels</span></span>
-<span id="cb62-16"><a href="05-variedades.html#cb62-16"></a>          <span class="dt">inflate.labels=</span>F,</span>
-<span id="cb62-17"><a href="05-variedades.html#cb62-17"></a>           <span class="dt">align.labels=</span><span class="kw">list</span>(</span>
-<span id="cb62-18"><a href="05-variedades.html#cb62-18"></a>        <span class="kw">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;top&quot;</span>),</span>
-<span id="cb62-19"><a href="05-variedades.html#cb62-19"></a>        <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;center&quot;</span>))) </span></code></pre></div>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="05-variedades.html#cb63-1"></a><span class="co"># dev.off()</span></span>
-<span id="cb63-2"><a href="05-variedades.html#cb63-2"></a><span class="co"># </span></span>
-<span id="cb63-3"><a href="05-variedades.html#cb63-3"></a><span class="co"># drive_upload(path = as_dribble(&quot;juanchi_guille/JMF_fina_2020&quot;), &quot;plots/treemap_cebada.png&quot;, overwrite = TRUE)</span></span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="05-variedades.html#cb56-1"></a><span class="kw">library</span>(treemap)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="05-variedades.html#cb57-1"></a>dat_sum &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-2"><a href="05-variedades.html#cb57-2"></a><span class="st">  </span><span class="co"># filter(cultivo_de_cosecha == &quot;Trigo&quot;) %&gt;% </span></span>
+<span id="cb57-3"><a href="05-variedades.html#cb57-3"></a><span class="st">  </span><span class="co"># filter(campana == &quot;19-20&quot;) %&gt;% </span></span>
+<span id="cb57-4"><a href="05-variedades.html#cb57-4"></a><span class="st">  </span><span class="co"># group_by(variedad) %&gt;%</span></span>
+<span id="cb57-5"><a href="05-variedades.html#cb57-5"></a><span class="st">  </span><span class="co"># filter(n()&gt;10) %&gt;% ungroup %&gt;%</span></span>
+<span id="cb57-6"><a href="05-variedades.html#cb57-6"></a><span class="st">  </span><span class="kw">group_by</span>(campana, cultivo_de_cosecha, variedad) <span class="op">%&gt;%</span></span>
+<span id="cb57-7"><a href="05-variedades.html#cb57-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">lotes=</span> <span class="kw">n</span>(), </span>
+<span id="cb57-8"><a href="05-variedades.html#cb57-8"></a>            <span class="dt">sup =</span> <span class="kw">sum</span>(superficie, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb57-9"><a href="05-variedades.html#cb57-9"></a>            <span class="dt">rinde_medio =</span> <span class="kw">median</span>(rinde, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb57-10"><a href="05-variedades.html#cb57-10"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor)<span class="op">%&gt;%</span></span>
+<span id="cb57-11"><a href="05-variedades.html#cb57-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">paste</span>(variedad, <span class="kw">round</span>(sup,<span class="dv">0</span>), <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)) </span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="05-variedades.html#cb58-1"></a><span class="co"># png(filename=&quot;plots/treemap_trigo_17-18.png&quot;, </span></span>
+<span id="cb58-2"><a href="05-variedades.html#cb58-2"></a><span class="co">#     width = 120, height = 120, units=&#39;mm&#39;, res = 300)</span></span>
+<span id="cb58-3"><a href="05-variedades.html#cb58-3"></a></span>
+<span id="cb58-4"><a href="05-variedades.html#cb58-4"></a><span class="kw">subset</span>(dat_sum, </span>
+<span id="cb58-5"><a href="05-variedades.html#cb58-5"></a>       cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Trigo&quot;</span> <span class="op">&amp;</span><span class="st"> </span></span>
+<span id="cb58-6"><a href="05-variedades.html#cb58-6"></a><span class="st">       </span>campana <span class="op">==</span><span class="st"> &#39;17-18&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-7"><a href="05-variedades.html#cb58-7"></a><span class="st">  </span><span class="kw">treemap</span>(<span class="dt">index=</span><span class="st">&quot;label&quot;</span>,</span>
+<span id="cb58-8"><a href="05-variedades.html#cb58-8"></a>          <span class="dt">vSize=</span><span class="st">&quot;sup&quot;</span>,</span>
+<span id="cb58-9"><a href="05-variedades.html#cb58-9"></a>          <span class="dt">vColor=</span><span class="st">&quot;rinde_medio&quot;</span>,</span>
+<span id="cb58-10"><a href="05-variedades.html#cb58-10"></a>          <span class="co"># border.col=c(&quot;grey70&quot;, &quot;grey90&quot;),</span></span>
+<span id="cb58-11"><a href="05-variedades.html#cb58-11"></a>          <span class="co"># palette=&quot;Spectral&quot;,</span></span>
+<span id="cb58-12"><a href="05-variedades.html#cb58-12"></a>          <span class="dt">type =</span> <span class="st">&quot;value&quot;</span>,</span>
+<span id="cb58-13"><a href="05-variedades.html#cb58-13"></a>          <span class="dt">title =</span> <span class="st">&quot;Superficie de trigo (has) - 2017/18&quot;</span>,</span>
+<span id="cb58-14"><a href="05-variedades.html#cb58-14"></a>          <span class="dt">title.legend =</span> <span class="st">&quot;Rendimiento medio (qq/ha)&quot;</span>,</span>
+<span id="cb58-15"><a href="05-variedades.html#cb58-15"></a>          <span class="dt">overlap.labels=</span><span class="dv">1</span>, </span>
+<span id="cb58-16"><a href="05-variedades.html#cb58-16"></a>          <span class="dt">bg.labels=</span><span class="kw">c</span>(<span class="st">&quot;transparent&quot;</span>),              </span>
+<span id="cb58-17"><a href="05-variedades.html#cb58-17"></a>          <span class="dt">inflate.labels=</span>F,</span>
+<span id="cb58-18"><a href="05-variedades.html#cb58-18"></a>          <span class="dt">align.labels=</span><span class="kw">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;center&quot;</span>)) </span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="05-variedades.html#cb59-1"></a><span class="co"># dev.off()</span></span>
+<span id="cb59-2"><a href="05-variedades.html#cb59-2"></a></span>
+<span id="cb59-3"><a href="05-variedades.html#cb59-3"></a><span class="co"># drive_upload(path = as_dribble(&quot;juanchi_guille/JMF_fina_2020&quot;), &quot;plots/treemap_trigo_17-18.png&quot;, overwrite = TRUE)</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="05-variedades.html#cb60-1"></a>evol_trigo &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;plots&quot;</span>), </span>
+<span id="cb60-2"><a href="05-variedades.html#cb60-2"></a>                         <span class="dt">pattern =</span> <span class="st">&quot;treemap_&quot;</span>, </span>
+<span id="cb60-3"><a href="05-variedades.html#cb60-3"></a>                         <span class="dt">all.files =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb60-4"><a href="05-variedades.html#cb60-4"></a>evol_trigo <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb60-5"><a href="05-variedades.html#cb60-5"></a><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">drive_upload</span>(.,</span>
+<span id="cb60-6"><a href="05-variedades.html#cb60-6"></a>                     <span class="dt">path =</span> <span class="kw">as_dribble</span>(<span class="st">&quot;juanchi_guille/JMF_fina_2020&quot;</span>),</span>
+<span id="cb60-7"><a href="05-variedades.html#cb60-7"></a>                     <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb60-8"><a href="05-variedades.html#cb60-8"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="05-variedades.html#cb61-1"></a><span class="co"># png(filename=&quot;plots/treemap_cebada.png&quot;, </span></span>
+<span id="cb61-2"><a href="05-variedades.html#cb61-2"></a><span class="co">#     width = 120, height = 120, units=&#39;mm&#39;, res = 300)</span></span>
+<span id="cb61-3"><a href="05-variedades.html#cb61-3"></a></span>
+<span id="cb61-4"><a href="05-variedades.html#cb61-4"></a><span class="kw">subset</span>(dat_sum, </span>
+<span id="cb61-5"><a href="05-variedades.html#cb61-5"></a>       cultivo_de_cosecha <span class="op">==</span><span class="st"> &quot;Cebada&quot;</span> ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb61-6"><a href="05-variedades.html#cb61-6"></a><span class="st">  </span><span class="kw">treemap</span>(<span class="dt">index=</span><span class="kw">c</span>(<span class="st">&quot;campana&quot;</span>, <span class="st">&quot;label&quot;</span>),</span>
+<span id="cb61-7"><a href="05-variedades.html#cb61-7"></a>          <span class="dt">vSize=</span><span class="st">&quot;sup&quot;</span>,</span>
+<span id="cb61-8"><a href="05-variedades.html#cb61-8"></a>          <span class="dt">vColor=</span><span class="st">&quot;rinde_medio&quot;</span>,</span>
+<span id="cb61-9"><a href="05-variedades.html#cb61-9"></a>          <span class="co"># border.col=c(&quot;grey70&quot;, &quot;grey90&quot;),</span></span>
+<span id="cb61-10"><a href="05-variedades.html#cb61-10"></a>          <span class="co"># palette=&quot;Spectral&quot;,</span></span>
+<span id="cb61-11"><a href="05-variedades.html#cb61-11"></a>          <span class="dt">type =</span> <span class="st">&quot;value&quot;</span>,</span>
+<span id="cb61-12"><a href="05-variedades.html#cb61-12"></a>          <span class="dt">title =</span> <span class="st">&quot;Superficie de cebada (has)&quot;</span>,</span>
+<span id="cb61-13"><a href="05-variedades.html#cb61-13"></a>          <span class="dt">title.legend =</span> <span class="st">&quot;Rendimiento medio (qq/ha)&quot;</span>,</span>
+<span id="cb61-14"><a href="05-variedades.html#cb61-14"></a>          <span class="dt">overlap.labels=</span><span class="dv">1</span>, </span>
+<span id="cb61-15"><a href="05-variedades.html#cb61-15"></a>          <span class="dt">bg.labels=</span><span class="kw">c</span>(<span class="st">&quot;transparent&quot;</span>),              <span class="co"># Background color of labels</span></span>
+<span id="cb61-16"><a href="05-variedades.html#cb61-16"></a>          <span class="dt">inflate.labels=</span>F,</span>
+<span id="cb61-17"><a href="05-variedades.html#cb61-17"></a>           <span class="dt">align.labels=</span><span class="kw">list</span>(</span>
+<span id="cb61-18"><a href="05-variedades.html#cb61-18"></a>        <span class="kw">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;top&quot;</span>),</span>
+<span id="cb61-19"><a href="05-variedades.html#cb61-19"></a>        <span class="kw">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;center&quot;</span>))) </span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="05-variedades.html#cb62-1"></a><span class="co"># dev.off()</span></span>
+<span id="cb62-2"><a href="05-variedades.html#cb62-2"></a><span class="co"># </span></span>
+<span id="cb62-3"><a href="05-variedades.html#cb62-3"></a><span class="co"># drive_upload(path = as_dribble(&quot;juanchi_guille/JMF_fina_2020&quot;), &quot;plots/treemap_cebada.png&quot;, overwrite = TRUE)</span></span></code></pre></div>
 </div>
 <div id="performance-variedades" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Performance variedades</h2>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="05-variedades.html#cb64-1"></a>dat <span class="op">%&gt;%</span></span>
-<span id="cb64-2"><a href="05-variedades.html#cb64-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Tr|Ceb&#39;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb64-3"><a href="05-variedades.html#cb64-3"></a><span class="st">  </span><span class="kw">select</span>(campana,Zona, cultivo_de_cosecha, variedad,rinde ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-4"><a href="05-variedades.html#cb64-4"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, variedad) <span class="op">%&gt;%</span></span>
-<span id="cb64-5"><a href="05-variedades.html#cb64-5"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">n</span>() <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-6"><a href="05-variedades.html#cb64-6"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor) -&gt;dat1</span>
-<span id="cb64-7"><a href="05-variedades.html#cb64-7"></a></span>
-<span id="cb64-8"><a href="05-variedades.html#cb64-8"></a>dat1 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-9"><a href="05-variedades.html#cb64-9"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Tr&#39;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb64-10"><a href="05-variedades.html#cb64-10"></a><span class="st">  </span><span class="kw">filter</span>(campana <span class="op">==</span><span class="st"> &quot;20-21&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-11"><a href="05-variedades.html#cb64-11"></a><span class="st">  </span><span class="kw">distinct</span>(variedad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-12"><a href="05-variedades.html#cb64-12"></a><span class="st">  </span><span class="kw">pull</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-13"><a href="05-variedades.html#cb64-13"></a><span class="st">  </span><span class="kw">droplevels</span>()-&gt;<span class="st"> </span>var_<span class="dv">20</span>_tr</span></code></pre></div>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="05-variedades.html#cb65-1"></a>trigo_zona =<span class="st"> </span><span class="kw">levels</span>(dat1<span class="op">$</span>Zona) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb65-2"><a href="05-variedades.html#cb65-2"></a><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">subset</span>(dat1, cultivo_de_cosecha<span class="op">==</span><span class="st"> &quot;Trigo&quot;</span> <span class="op">&amp;</span></span>
-<span id="cb65-3"><a href="05-variedades.html#cb65-3"></a><span class="st">                 </span>variedad <span class="op">%in%</span><span class="st"> </span>var_<span class="dv">20</span>_tr <span class="op">&amp;</span></span>
-<span id="cb65-4"><a href="05-variedades.html#cb65-4"></a><span class="st">                 </span>Zona <span class="op">==</span><span class="st"> </span>. ) <span class="op">%&gt;%</span><span class="st">   </span></span>
-<span id="cb65-5"><a href="05-variedades.html#cb65-5"></a><span class="st">        </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb65-6"><a href="05-variedades.html#cb65-6"></a><span class="st">        </span><span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">reorder</span>(variedad, rinde, mean), <span class="dt">y=</span>rinde)<span class="op">+</span></span>
-<span id="cb65-7"><a href="05-variedades.html#cb65-7"></a><span class="st">        </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.3</span>)<span class="op">+</span></span>
-<span id="cb65-8"><a href="05-variedades.html#cb65-8"></a><span class="st">        </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb65-9"><a href="05-variedades.html#cb65-9"></a><span class="st">        </span><span class="kw">coord_flip</span>()<span class="op">+</span></span>
-<span id="cb65-10"><a href="05-variedades.html#cb65-10"></a><span class="st">        </span>theme_bw2<span class="op">+</span></span>
-<span id="cb65-11"><a href="05-variedades.html#cb65-11"></a><span class="st">        </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">round</span>(..y..,<span class="dv">0</span>)), </span>
-<span id="cb65-12"><a href="05-variedades.html#cb65-12"></a>                     <span class="dt">fun=</span>mean, <span class="dt">geom=</span><span class="st">&quot;text&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>,<span class="dt">vjust =</span> <span class="fl">-0.5</span>)<span class="op">+</span></span>
-<span id="cb65-13"><a href="05-variedades.html#cb65-13"></a><span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span> scales<span class="op">::</span><span class="kw">pretty_breaks</span>())<span class="op">+</span></span>
-<span id="cb65-14"><a href="05-variedades.html#cb65-14"></a><span class="st">        </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw">paste0</span>(.), </span>
-<span id="cb65-15"><a href="05-variedades.html#cb65-15"></a>             <span class="dt">x=</span><span class="st">&quot;&quot;</span>, <span class="dt">y=</span><span class="st">&quot;kg/ha&quot;</span>)</span>
-<span id="cb65-16"><a href="05-variedades.html#cb65-16"></a>  ) </span>
-<span id="cb65-17"><a href="05-variedades.html#cb65-17"></a>trigo_zona</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="05-variedades.html#cb63-1"></a>dat <span class="op">%&gt;%</span></span>
+<span id="cb63-2"><a href="05-variedades.html#cb63-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Tr|Ceb&#39;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb63-3"><a href="05-variedades.html#cb63-3"></a><span class="st">  </span><span class="kw">select</span>(campana,Zona, cultivo_de_cosecha, variedad,rinde ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb63-4"><a href="05-variedades.html#cb63-4"></a><span class="st">  </span><span class="kw">group_by</span>(cultivo_de_cosecha, Zona, variedad) <span class="op">%&gt;%</span></span>
+<span id="cb63-5"><a href="05-variedades.html#cb63-5"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">n</span>() <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb63-6"><a href="05-variedades.html#cb63-6"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.character, as.factor) -&gt;dat1</span>
+<span id="cb63-7"><a href="05-variedades.html#cb63-7"></a></span>
+<span id="cb63-8"><a href="05-variedades.html#cb63-8"></a>dat1 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb63-9"><a href="05-variedades.html#cb63-9"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Tr&#39;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb63-10"><a href="05-variedades.html#cb63-10"></a><span class="st">  </span><span class="kw">filter</span>(campana <span class="op">==</span><span class="st"> &quot;20-21&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb63-11"><a href="05-variedades.html#cb63-11"></a><span class="st">  </span><span class="kw">distinct</span>(variedad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb63-12"><a href="05-variedades.html#cb63-12"></a><span class="st">  </span><span class="kw">pull</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb63-13"><a href="05-variedades.html#cb63-13"></a><span class="st">  </span><span class="kw">droplevels</span>()-&gt;<span class="st"> </span>var_<span class="dv">20</span>_tr</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="05-variedades.html#cb64-1"></a>trigo_zona =<span class="st"> </span><span class="kw">levels</span>(dat1<span class="op">$</span>Zona) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb64-2"><a href="05-variedades.html#cb64-2"></a><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">subset</span>(dat1, cultivo_de_cosecha<span class="op">==</span><span class="st"> &quot;Trigo&quot;</span> <span class="op">&amp;</span></span>
+<span id="cb64-3"><a href="05-variedades.html#cb64-3"></a><span class="st">                 </span>variedad <span class="op">%in%</span><span class="st"> </span>var_<span class="dv">20</span>_tr <span class="op">&amp;</span></span>
+<span id="cb64-4"><a href="05-variedades.html#cb64-4"></a><span class="st">                 </span>Zona <span class="op">==</span><span class="st"> </span>. ) <span class="op">%&gt;%</span><span class="st">   </span></span>
+<span id="cb64-5"><a href="05-variedades.html#cb64-5"></a><span class="st">        </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb64-6"><a href="05-variedades.html#cb64-6"></a><span class="st">        </span><span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">reorder</span>(variedad, rinde, mean), <span class="dt">y=</span>rinde)<span class="op">+</span></span>
+<span id="cb64-7"><a href="05-variedades.html#cb64-7"></a><span class="st">        </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.3</span>)<span class="op">+</span></span>
+<span id="cb64-8"><a href="05-variedades.html#cb64-8"></a><span class="st">        </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb64-9"><a href="05-variedades.html#cb64-9"></a><span class="st">        </span><span class="kw">coord_flip</span>()<span class="op">+</span></span>
+<span id="cb64-10"><a href="05-variedades.html#cb64-10"></a><span class="st">        </span>theme_bw2<span class="op">+</span></span>
+<span id="cb64-11"><a href="05-variedades.html#cb64-11"></a><span class="st">        </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">round</span>(..y..,<span class="dv">0</span>)), </span>
+<span id="cb64-12"><a href="05-variedades.html#cb64-12"></a>                     <span class="dt">fun=</span>mean, <span class="dt">geom=</span><span class="st">&quot;text&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>,<span class="dt">vjust =</span> <span class="fl">-0.5</span>)<span class="op">+</span></span>
+<span id="cb64-13"><a href="05-variedades.html#cb64-13"></a><span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span> scales<span class="op">::</span><span class="kw">pretty_breaks</span>())<span class="op">+</span></span>
+<span id="cb64-14"><a href="05-variedades.html#cb64-14"></a><span class="st">        </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw">paste0</span>(.), </span>
+<span id="cb64-15"><a href="05-variedades.html#cb64-15"></a>             <span class="dt">x=</span><span class="st">&quot;&quot;</span>, <span class="dt">y=</span><span class="st">&quot;kg/ha&quot;</span>)</span>
+<span id="cb64-16"><a href="05-variedades.html#cb64-16"></a>  ) </span>
+<span id="cb64-17"><a href="05-variedades.html#cb64-17"></a>trigo_zona</span></code></pre></div>
 <pre><code>## [[1]]</code></pre>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
 <pre><code>## 
 ## [[2]]</code></pre>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-46-2.png" width="672" /></p>
 <pre><code>## 
 ## [[3]]</code></pre>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-12-3.png" width="672" /></p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="05-variedades.html#cb69-1"></a><span class="co"># trigo_zona[[1]] %&gt;% </span></span>
-<span id="cb69-2"><a href="05-variedades.html#cb69-2"></a><span class="co">#   ggsave(file = &quot;plots/trigo_perf_Costa.png&quot;, w=5, h=5)</span></span>
-<span id="cb69-3"><a href="05-variedades.html#cb69-3"></a><span class="co"># trigo_zona[[2]] %&gt;% </span></span>
-<span id="cb69-4"><a href="05-variedades.html#cb69-4"></a><span class="co">#   ggsave(file = &quot;plots/trigo_perf_Madariaga.png&quot;, w=5, h=5)</span></span>
-<span id="cb69-5"><a href="05-variedades.html#cb69-5"></a><span class="co"># trigo_zona[[3]] %&gt;% </span></span>
-<span id="cb69-6"><a href="05-variedades.html#cb69-6"></a><span class="co">#   ggsave(file = &quot;plots/trigo_perf_Sierra.png&quot;, w=5, h=5)</span></span></code></pre></div>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="05-variedades.html#cb70-1"></a><span class="kw">list.files</span>(<span class="dt">path =</span> here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;plots&quot;</span>), </span>
-<span id="cb70-2"><a href="05-variedades.html#cb70-2"></a>           <span class="dt">pattern =</span> <span class="st">&quot;perf&quot;</span>, </span>
-<span id="cb70-3"><a href="05-variedades.html#cb70-3"></a>           <span class="dt">all.files =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">   </span></span>
-<span id="cb70-4"><a href="05-variedades.html#cb70-4"></a><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">drive_upload</span>(., <span class="dt">path =</span> <span class="kw">as_dribble</span>(<span class="st">&quot;juanchi_guille/JMF_fina_2020/plots&quot;</span>), </span>
-<span id="cb70-5"><a href="05-variedades.html#cb70-5"></a><span class="dt">overwrite =</span> <span class="ot">TRUE</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="05-variedades.html#cb71-1"></a>dat1 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb71-2"><a href="05-variedades.html#cb71-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Ceb&#39;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb71-3"><a href="05-variedades.html#cb71-3"></a><span class="st">  </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb71-4"><a href="05-variedades.html#cb71-4"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">reorder</span>(variedad, rinde, mean), <span class="dt">y=</span>rinde)<span class="op">+</span></span>
-<span id="cb71-5"><a href="05-variedades.html#cb71-5"></a><span class="st">  </span><span class="kw">facet_wrap</span>(Zona<span class="op">~</span>., <span class="dt">scales=</span><span class="st">&quot;free_x&quot;</span>)<span class="op">+</span></span>
-<span id="cb71-6"><a href="05-variedades.html#cb71-6"></a><span class="st">  </span></span>
-<span id="cb71-7"><a href="05-variedades.html#cb71-7"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.3</span>)<span class="op">+</span></span>
-<span id="cb71-8"><a href="05-variedades.html#cb71-8"></a><span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb71-9"><a href="05-variedades.html#cb71-9"></a><span class="st">  </span><span class="co"># coord_flip()+</span></span>
-<span id="cb71-10"><a href="05-variedades.html#cb71-10"></a><span class="st">  </span>theme_aapre<span class="op">+</span></span>
-<span id="cb71-11"><a href="05-variedades.html#cb71-11"></a><span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">round</span>(..y..,<span class="dv">0</span>)), </span>
-<span id="cb71-12"><a href="05-variedades.html#cb71-12"></a>               <span class="dt">fun=</span>mean, <span class="dt">geom=</span><span class="st">&quot;text&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>,<span class="dt">vjust =</span> <span class="fl">-0.5</span>)<span class="op">+</span></span>
-<span id="cb71-13"><a href="05-variedades.html#cb71-13"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span> scales<span class="op">::</span><span class="kw">pretty_breaks</span>())<span class="op">+</span></span>
-<span id="cb71-14"><a href="05-variedades.html#cb71-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Cebada&quot;</span>, </span>
-<span id="cb71-15"><a href="05-variedades.html#cb71-15"></a>       <span class="dt">x=</span><span class="st">&quot;&quot;</span>, <span class="dt">y=</span><span class="st">&quot;kg/ha&quot;</span>)</span></code></pre></div>
-<p><img src="05-variedades_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="05-variedades.html#cb72-1"></a><span class="kw">last_plot</span>() <span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb72-2"><a href="05-variedades.html#cb72-2"></a><span class="st">  </span><span class="kw">ggsave</span>(<span class="dt">file =</span> <span class="st">&quot;plots/cebada_perf.png&quot;</span>, <span class="dt">w=</span><span class="dv">5</span>, <span class="dt">h=</span><span class="dv">4</span>)</span>
-<span id="cb72-3"><a href="05-variedades.html#cb72-3"></a><span class="kw">drive_upload</span>(<span class="dt">path =</span> <span class="kw">as_dribble</span>(<span class="st">&quot;juanchi_guille/JMF_fina_2020/plots&quot;</span>), <span class="st">&quot;plots/cebada_perf.png&quot;</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-46-3.png" width="672" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="05-variedades.html#cb68-1"></a><span class="co"># trigo_zona[[1]] %&gt;% </span></span>
+<span id="cb68-2"><a href="05-variedades.html#cb68-2"></a><span class="co">#   ggsave(file = &quot;plots/trigo_perf_Costa.png&quot;, w=5, h=5)</span></span>
+<span id="cb68-3"><a href="05-variedades.html#cb68-3"></a><span class="co"># trigo_zona[[2]] %&gt;% </span></span>
+<span id="cb68-4"><a href="05-variedades.html#cb68-4"></a><span class="co">#   ggsave(file = &quot;plots/trigo_perf_Madariaga.png&quot;, w=5, h=5)</span></span>
+<span id="cb68-5"><a href="05-variedades.html#cb68-5"></a><span class="co"># trigo_zona[[3]] %&gt;% </span></span>
+<span id="cb68-6"><a href="05-variedades.html#cb68-6"></a><span class="co">#   ggsave(file = &quot;plots/trigo_perf_Sierra.png&quot;, w=5, h=5)</span></span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="05-variedades.html#cb69-1"></a><span class="kw">list.files</span>(<span class="dt">path =</span> here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;plots&quot;</span>), </span>
+<span id="cb69-2"><a href="05-variedades.html#cb69-2"></a>           <span class="dt">pattern =</span> <span class="st">&quot;perf&quot;</span>, </span>
+<span id="cb69-3"><a href="05-variedades.html#cb69-3"></a>           <span class="dt">all.files =</span> <span class="ot">TRUE</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">   </span></span>
+<span id="cb69-4"><a href="05-variedades.html#cb69-4"></a><span class="st">  </span><span class="kw">map</span>(<span class="op">~</span><span class="st"> </span><span class="kw">drive_upload</span>(., <span class="dt">path =</span> <span class="kw">as_dribble</span>(<span class="st">&quot;juanchi_guille/JMF_fina_2020/plots&quot;</span>), </span>
+<span id="cb69-5"><a href="05-variedades.html#cb69-5"></a><span class="dt">overwrite =</span> <span class="ot">TRUE</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="05-variedades.html#cb70-1"></a>dat1 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb70-2"><a href="05-variedades.html#cb70-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(cultivo_de_cosecha, <span class="st">&#39;Ceb&#39;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb70-3"><a href="05-variedades.html#cb70-3"></a><span class="st">  </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb70-4"><a href="05-variedades.html#cb70-4"></a><span class="st">  </span><span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">reorder</span>(variedad, rinde, mean), <span class="dt">y=</span>rinde)<span class="op">+</span></span>
+<span id="cb70-5"><a href="05-variedades.html#cb70-5"></a><span class="st">  </span><span class="kw">facet_wrap</span>(Zona<span class="op">~</span>., <span class="dt">scales=</span><span class="st">&quot;free_x&quot;</span>)<span class="op">+</span></span>
+<span id="cb70-6"><a href="05-variedades.html#cb70-6"></a><span class="st">  </span></span>
+<span id="cb70-7"><a href="05-variedades.html#cb70-7"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.3</span>)<span class="op">+</span></span>
+<span id="cb70-8"><a href="05-variedades.html#cb70-8"></a><span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb70-9"><a href="05-variedades.html#cb70-9"></a><span class="st">  </span><span class="co"># coord_flip()+</span></span>
+<span id="cb70-10"><a href="05-variedades.html#cb70-10"></a><span class="st">  </span>theme_aapre<span class="op">+</span></span>
+<span id="cb70-11"><a href="05-variedades.html#cb70-11"></a><span class="st">  </span><span class="kw">stat_summary</span>(<span class="kw">aes</span>(<span class="dt">label=</span><span class="kw">round</span>(..y..,<span class="dv">0</span>)), </span>
+<span id="cb70-12"><a href="05-variedades.html#cb70-12"></a>               <span class="dt">fun=</span>mean, <span class="dt">geom=</span><span class="st">&quot;text&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>,<span class="dt">vjust =</span> <span class="fl">-0.5</span>)<span class="op">+</span></span>
+<span id="cb70-13"><a href="05-variedades.html#cb70-13"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span> scales<span class="op">::</span><span class="kw">pretty_breaks</span>())<span class="op">+</span></span>
+<span id="cb70-14"><a href="05-variedades.html#cb70-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Cebada&quot;</span>, </span>
+<span id="cb70-15"><a href="05-variedades.html#cb70-15"></a>       <span class="dt">x=</span><span class="st">&quot;&quot;</span>, <span class="dt">y=</span><span class="st">&quot;kg/ha&quot;</span>)</span></code></pre></div>
+<p><img src="Analisis_de_campana_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="05-variedades.html#cb71-1"></a><span class="kw">last_plot</span>() <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb71-2"><a href="05-variedades.html#cb71-2"></a><span class="st">  </span><span class="kw">ggsave</span>(<span class="dt">file =</span> <span class="st">&quot;plots/cebada_perf.png&quot;</span>, <span class="dt">w=</span><span class="dv">5</span>, <span class="dt">h=</span><span class="dv">4</span>)</span>
+<span id="cb71-3"><a href="05-variedades.html#cb71-3"></a><span class="kw">drive_upload</span>(<span class="dt">path =</span> <span class="kw">as_dribble</span>(<span class="st">&quot;juanchi_guille/JMF_fina_2020/plots&quot;</span>), <span class="st">&quot;plots/cebada_perf.png&quot;</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 
 </div>
 </div>

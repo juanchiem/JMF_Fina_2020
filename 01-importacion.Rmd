@@ -1,6 +1,6 @@
 # Importacion {#import}
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, eval=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 pacman::p_load(tidyverse, googlesheets4)
 # gs4_auth(email = "edwardsmolina@gmail.com")
@@ -17,17 +17,10 @@ raw <- read_sheet(jmf, sheet = "raw", guess_max = 10000, skip=1) %>%
   # mutate_if(is.character, as.factor) %>% 
   # mutate(fsiembra = lubridate::ymd(fsiembra)) 
 # glimpse(raw)
-# summary(raw$superficie)
-
-```
-
-```{r eval=FALSE}
-wiki <- read_sheet(jmf, sheet = "wiki", guess_max = 10000, skip=0) 
-# wiki %>%  view
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 raw %>% 
   mutate(Zona = case_when(
     str_detect(zona_0, "Madariaga|Maipú") ~ "Madariaga", 
@@ -71,7 +64,6 @@ all_images %>%
                      overwrite = TRUE)
   )
 ```
-
 
 * Cantidad de datos/celdas vacias por variable
 

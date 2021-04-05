@@ -1,6 +1,6 @@
 ---
 title: "Modelo de análisis de campaña"
-author: "[Juan Edwards](https://github.com/author-name)"
+author: "[Juan Edwards](https://github.com/juanchiem)"
 url: 'juanchiem.github.io/jmf_fina_2020/'
 github-repo: "juanchiem/JMF_Fina_2020"
 link-citations: true
@@ -8,4 +8,9 @@ site: bookdown::bookdown_site
 ---
 
 # Intro {-}
+
+Este análisis contempla 3 años de cultivos de invierno de la región Sudeste de Buenos Aires. 
+
+Para su uso se debe clonar el repositorio ("https://github.com/juanchiem/JMF_Fina_2020.git") y recodificar adecuadamente el nombre de las variables y graficos resultantes, en concordancia con el dataset a analizar.
+
 
