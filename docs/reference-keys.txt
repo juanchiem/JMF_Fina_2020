@@ -12,3 +12,5 @@ performance-variedades
 protección
 lotes-aplicados-en-2020
 malezas
+zonas-de-análisis
+uniquebsasname_2

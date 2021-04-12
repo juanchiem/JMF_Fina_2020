@@ -5,6 +5,80 @@ output:
     chunk_output_type: console
 ---
 
+# Zonas de análisis
+
+```{r, eval=FALSE}
+pacman::p_load(tidyverse, sf)
+
+# acondicionar vista de mapa
+
+theme_set(theme_bw()+
+            theme(
+              panel.grid.major = 
+                element_line(color = gray(0.5), 
+                             linetype = "dashed", size = 0.05), 
+              panel.background = element_rect(fill = "aliceblue"),
+              axis.text.x =  element_text(size = 6),
+              axis.text.y = element_text(size = 6),
+            ))
+```
+
+          
+```{r, eval=FALSE}
+#provincias argentinas
+ARG <- raster::getData(name = "GADM", country = "ARG", level = 0) %>% 
+  st_as_sf() 
+
+#municipios de Buenos Aires
+BSAS <- raster::getData(name = "GADM", country = "ARG", level = 2) %>% 
+  st_as_sf() %>% 
+  filter(NAME_1 == "Buenos Aires") 
+
+# unique(BSAS$NAME_2)
+
+```
+
+
+```{r, eval=FALSE}
+# crear zonzas a partir de municipios que se incluyen  
+
+BSAS %>% 
+  mutate(Zona = case_when(
+  str_detect(NAME_2, "Madariaga|Maipú|Chiquita|Ayacucho") ~ "Madariaga", 
+  str_detect(NAME_2, "Balcarce|Lober") ~ "Sierra", 
+  str_detect(NAME_2, "Pueyrre|Alvarado") ~ "Costa")) %>% 
+  drop_na(Zona) %>% 
+  mutate(id = gsub("[^A-Z]+", "", .$NAME_2)) -> jmf
+
+jmf <- cbind(jmf, st_coordinates(st_centroid(jmf$geometry))) %>%
+  mutate(has = st_area(geometry)/10000)
+```
+
+```{r, eval=FALSE}
+jmf %>% 
+  group_by(Zona) %>% 
+  summarise(has = sum(has))
+```
+
+```{r, eval=FALSE}
+ARG %>% 
+  ggplot()+
+  geom_sf()+
+  geom_sf(data = BSAS, fill = "gray98", color= "gray60", size =0.2) +
+  geom_sf(data = jmf, 
+          aes(fill = Zona),  color = gray(.1), size = 0.2) +
+  coord_sf(xlim = c(-60,-56.5), ylim = c(-39, -36), expand = FALSE, 
+           label_axes = waiver())+
+  geom_text(data = jmf, aes(x = X, y = Y,  label = id), 
+            size = 3, hjust = 0.5, fontface = "bold")+
+  labs(x = "", y = "")
+
+# ggsave(last_plot(), file = "plots/zonas.png", w=6, h=6)
+# drive_upload(path = as_dribble("juanchi_guille/JMF_fina_2020"), "plots/zonas.png", overwrite = TRUE)
+
+```
+![zonas-JMF](plots_superficies/mapa_zonas.png)
+
 # Superficies
 
 ```{r message=FALSE, warning=FALSE}
